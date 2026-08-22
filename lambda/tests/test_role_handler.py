@@ -60,6 +60,15 @@ class SelectRoleHandlerTests(unittest.TestCase):
 
     @patch("handlers.select_role._identity_client")
     @patch("handlers.select_role.ListingsRepository")
+    def test_admin_cannot_self_select_a_public_posting_role(self, repository_class, identity_factory):
+        response = select_role.lambda_handler(event(groups="Admin"), None)
+
+        self.assertEqual(response["statusCode"], 409)
+        repository_class.assert_not_called()
+        identity_factory.assert_not_called()
+
+    @patch("handlers.select_role._identity_client")
+    @patch("handlers.select_role.ListingsRepository")
     def test_rolls_back_profile_if_cognito_assignment_fails(self, repository_class, identity_factory):
         repository = repository_class.return_value
         repository.claim_user_role.return_value = True

@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         return http.unauthorized()
 
     existing = set(authz.caller_groups(event))
-    if existing.intersection({"Landlord", "Agent"}):
+    if existing.intersection({"Landlord", "Agent", "Admin"}):
         return http.conflict("posting_role_already_selected")
 
     try:
