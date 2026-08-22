@@ -27,5 +27,27 @@ module "cost_control" {
   alert_email        = var.alert_email
 }
 
-# NOTE: the lambda_api and observability modules land with the API handlers
-# milestone. This file is intentionally minimal until then.
+
+module "api" {
+  source                      = "../../modules/lambda_api"
+  name_prefix                 = local.name_prefix
+  lambda_source_dir           = abspath("${path.root}/../../../lambda/src")
+  listings_table_name         = module.listings_store.table_name
+  listings_table_arn          = module.listings_store.table_arn
+  media_bucket_name           = module.media_storage.bucket_name
+  media_bucket_arn            = module.media_storage.bucket_arn
+  allowed_origins             = var.allowed_origins
+  aws_region                  = var.aws_region
+  cognito_user_pool_id        = module.auth.user_pool_id
+  cognito_user_pool_client_id = module.auth.user_pool_client_id
+  tags                        = local.common_tags
+}
+
+module "observability" {
+  source                    = "../../modules/observability"
+  name_prefix               = local.name_prefix
+  lambda_function_names     = module.api.function_names
+  api_access_log_group_name = module.api.api_access_log_group_name
+  alert_email               = var.alert_email
+  tags                      = local.common_tags
+}

@@ -21,3 +21,11 @@ output "cognito_user_pool_id" {
 output "cognito_user_pool_client_id" {
   value = module.auth.user_pool_client_id
 }
+
+output "api_url" {
+  value = module.api.api_url
+}
+
+output "api_execution_arn" {
+  value = module.api.api_execution_arn
+}
