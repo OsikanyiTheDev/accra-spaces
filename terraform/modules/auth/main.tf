@@ -63,8 +63,18 @@ resource "aws_cognito_user_pool_client" "web" {
 }
 
 resource "aws_cognito_user_pool_domain" "hosted_ui" {
-  domain       = var.cognito_domain_prefix
+  domain                = var.cognito_domain_prefix
+  user_pool_id          = aws_cognito_user_pool.pool.id
+  managed_login_version = 1
+}
+
+resource "aws_cognito_user_pool_ui_customization" "hosted_ui" {
   user_pool_id = aws_cognito_user_pool.pool.id
+  client_id    = aws_cognito_user_pool_client.web.id
+  css          = file("${path.module}/assets/hosted-ui.css")
+  image_file   = filebase64("${path.module}/assets/accra-spaces-logo.png")
+
+  depends_on = [aws_cognito_user_pool_domain.hosted_ui]
 }
 
 resource "aws_cognito_user_group" "roles" {

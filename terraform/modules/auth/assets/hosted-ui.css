@@ -1,0 +1,104 @@
+.logo-customizable {
+  max-width: 72%;
+  max-height: 88px;
+}
+
+.banner-customizable {
+  padding: 22px 0 10px 0;
+  background-color: #fffefa;
+}
+
+.label-customizable {
+  font-weight: 700;
+  color: #322616;
+}
+
+.textDescription-customizable {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  color: #71725f;
+}
+
+.idpDescription-customizable {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  color: #71725f;
+}
+
+.legalText-customizable {
+  color: #71725f;
+  font-size: 11px;
+}
+
+.submitButton-customizable {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  height: 48px;
+  width: 100%;
+  color: #201508;
+  background-color: #d9a853;
+  border: 1px solid #c4933f;
+  border-radius: 9px;
+}
+
+.submitButton-customizable:hover {
+  color: #ffffff;
+  background-color: #7a5e35;
+  border-color: #7a5e35;
+}
+
+.errorMessage-customizable {
+  padding: 12px;
+  font-size: 13px;
+  width: 100%;
+  background-color: #fff0ed;
+  border: 1px solid #e1b5ac;
+  color: #71362d;
+  box-sizing: border-box;
+}
+
+.inputField-customizable {
+  width: 100%;
+  height: 46px;
+  color: #322616;
+  background-color: #ffffff;
+  border: 1px solid #d9d5ca;
+  border-radius: 9px;
+}
+
+.inputField-customizable:focus {
+  border-color: #a4702d;
+  outline: 0;
+}
+
+.socialButton-customizable {
+  height: 46px;
+  text-align: center;
+  width: 100%;
+  color: #322616;
+  background-color: #fffefa;
+  border-color: #bbbcae;
+  border-radius: 9px;
+}
+
+.redirect-customizable {
+  text-align: center;
+  color: #7a5e35;
+}
+
+.passwordCheck-notValid-customizable {
+  color: #a64131;
+}
+
+.passwordCheck-valid-customizable {
+  color: #256e4b;
+}
+
+.background-customizable {
+  background-color: #f8f6f0;
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="90" viewBox="0 0 360 90">
+  <rect width="360" height="90" fill="none"/>
+  <circle cx="45" cy="45" r="35" fill="#322616"/>
+  <text x="31" y="60" font-family="Georgia, serif" font-size="45" font-weight="700" fill="#E3B96D">A</text>
+  <text x="94" y="55" font-family="Georgia, 'Times New Roman', serif" font-size="31" fill="#322616" letter-spacing="-0.5">Accra</text>
+  <text x="181" y="55" font-family="Arial, sans-serif" font-size="29" font-weight="700" fill="#A4702D" letter-spacing="-0.6">Spaces</text>
+</svg>
