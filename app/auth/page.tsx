@@ -7,8 +7,8 @@ export const metadata: Metadata = { title: "Account access", description: "Verif
 
 const ERROR_MESSAGES: Record<string, string> = {
   invalid_callback: "The sign-in callback could not be verified. Please try again.",
-  not_configured: "Authentication has not been connected to a deployed Cognito environment yet.",
-  token_exchange_failed: "Cognito could not complete sign-in. Please try again.",
+  not_configured: "Account access is not connected in this environment yet.",
+  token_exchange_failed: "Sign-in could not be completed. Please try again.",
 };
 
 export default async function AuthPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
@@ -43,14 +43,13 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             </>
           ) : (
             <>
-              <p>{configured ? "Sign in through the Cognito-hosted authorization-code flow. New accounts must confirm their email before continuing." : "Cognito is finalized in code, but no AWS environment has been applied. Account creation stays disabled until the Terraform plan is reviewed and deployed."}</p>
+              <p>{configured ? "Use your email and password. New accounts confirm the verification code sent to their email." : "Account access is not connected in this environment yet."}</p>
               <div className="auth-status-list">
                 <span><Icon name="check" size={16} /> Verified email + password</span>
-                <span><Icon name="check" size={16} /> Authorization code with PKCE</span>
-                <span><Icon name="check" size={16} /> HTTP-only session cookies</span>
+                <span><Icon name="check" size={16} /> Verification code confirmation by email</span>
               </div>
               {configured ? <a className="button button-dark button-full" href="/api/auth/login">Sign in or create account <Icon name="arrow-right" size={17} /></a> : <button className="button button-dark button-full is-disabled" type="button" disabled>Sign in or create account</button>}
-              <small>{configured ? "Passwords are handled by Cognito and never pass through the Accra Spaces API." : "No password or personal information is collected by this preview."}</small>
+              <small>{configured ? "Your password is handled securely by the account service." : "No password or personal information is collected by this preview."}</small>
               <Link className="text-link" href="/">Continue exploring instead</Link>
             </>
           )}
