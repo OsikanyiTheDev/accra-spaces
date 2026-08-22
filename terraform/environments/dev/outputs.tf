@@ -18,6 +18,14 @@ output "cognito_user_pool_id" {
   value = module.auth.user_pool_id
 }
 
+output "cognito_user_pool_arn" {
+  value = module.auth.user_pool_arn
+}
+
+output "cognito_user_pool_domain_prefix" {
+  value = module.auth.user_pool_domain
+}
+
 output "cognito_user_pool_client_id" {
   value = module.auth.user_pool_client_id
 }

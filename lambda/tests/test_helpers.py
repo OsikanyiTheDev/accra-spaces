@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from shared.completeness import compute_completeness  # noqa: E402
 from shared.numbers import format_ghs, mask_phone  # noqa: E402
-from shared.repository import FAV_SK, SEARCH_SK, ListingsRepository  # noqa: E402
+from shared.repository import FAV_SK, PROFILE_SK, SEARCH_SK, ListingsRepository  # noqa: E402
 from shared.search import build_browse_query, decode_cursor, encode_cursor  # noqa: E402
 from shared.validation import validate_search_params  # noqa: E402
 
@@ -84,14 +84,21 @@ class SearchQueryTests(unittest.TestCase):
         self.assertIsNone(decode_cursor("!!!not-base64!!!"))
 
 
+class FakeConditionalConflict(Exception):
+    response = {"Error": {"Code": "ConditionalCheckFailedException"}}
+
+
 class FakeTable:
     """Minimal in-memory DynamoDB double for repository tests."""
 
     def __init__(self):
         self.items: dict[tuple[str, str], dict] = {}
 
-    def put_item(self, Item):
-        self.items[(Item["PK"], Item["SK"])] = dict(Item)
+    def put_item(self, Item, ConditionExpression=None):
+        key = (Item["PK"], Item["SK"])
+        if ConditionExpression and key in self.items:
+            raise FakeConditionalConflict()
+        self.items[key] = dict(Item)
 
     def get_item(self, Key):
         return {"Item": self.items.get((Key["PK"], Key["SK"]))}
@@ -147,6 +154,12 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(len(favorites), 2)
         searches = self.repo.query_user_items("sub-1", "SEARCH#")
         self.assertEqual(len(searches), 1)
+
+    def test_posting_role_can_only_be_claimed_once(self):
+        self.assertTrue(self.repo.claim_user_role("sub-1", "Landlord"))
+        self.assertFalse(self.repo.claim_user_role("sub-1", "Agent"))
+        profile = self.repo.get_user_item("sub-1", PROFILE_SK)
+        self.assertEqual(profile["role"], "Landlord")
 
 
 class MediaPolicyTests(unittest.TestCase):

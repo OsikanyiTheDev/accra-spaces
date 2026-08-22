@@ -373,6 +373,17 @@ def validate_saved_search(payload: dict[str, Any]) -> tuple[dict[str, Any], list
     return validate_search_params(payload)
 
 
+def validate_role_selection(payload: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    """Validate the one-time, self-declared posting role selection."""
+    errors: list[str] = []
+    role = payload.get("role")
+    role_map = {"landlord": "Landlord", "agent": "Agent"}
+    if role not in role_map:
+        errors.append("role must be one of: landlord, agent")
+        return {}, errors
+    return {"role": role_map[role]}, errors
+
+
 def validate_media_request(payload: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
     errors: list[str] = []
     clean: dict[str, Any] = {}

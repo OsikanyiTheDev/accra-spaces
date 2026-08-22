@@ -39,6 +39,7 @@ module "api" {
   allowed_origins             = var.allowed_origins
   aws_region                  = var.aws_region
   cognito_user_pool_id        = module.auth.user_pool_id
+  cognito_user_pool_arn       = module.auth.user_pool_arn
   cognito_user_pool_client_id = module.auth.user_pool_client_id
   tags                        = local.common_tags
 }

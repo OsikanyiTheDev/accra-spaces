@@ -13,9 +13,9 @@ monthly_budget_usd = 10
 cognito_domain_prefix = "accraspaces-dev-ACCOUNT_ID"
 
 auth_callback_urls = [
-  "http://localhost:3000"
+  "http://localhost:3000/api/auth/callback"
 ]
 
 auth_logout_urls = [
-  "http://localhost:3000"
+  "http://localhost:3000/"
 ]

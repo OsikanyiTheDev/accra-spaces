@@ -86,6 +86,11 @@ locals {
       route_key = "DELETE /me/saved-searches/{id}"
       auth      = "JWT"
     }
+    select_role = {
+      handler   = "handlers.select_role.lambda_handler"
+      route_key = "POST /me/role"
+      auth      = "JWT"
+    }
     update_listing_status = {
       handler   = "handlers.update_listing_status.lambda_handler"
       route_key = "PATCH /admin/listings/{id}/status"
@@ -142,6 +147,12 @@ resource "aws_iam_role_policy" "api_data_access" {
           "${var.media_bucket_arn}/pending/*",
         ]
       },
+      {
+        Sid      = "AssignSelfDeclaredPostingRole"
+        Effect   = "Allow"
+        Action   = ["cognito-idp:AdminAddUserToGroup"]
+        Resource = var.cognito_user_pool_arn
+      },
     ]
   })
 }
@@ -168,8 +179,9 @@ resource "aws_lambda_function" "api" {
 
   environment {
     variables = {
-      LISTINGS_TABLE = var.listings_table_name
-      MEDIA_BUCKET   = var.media_bucket_name
+      LISTINGS_TABLE       = var.listings_table_name
+      MEDIA_BUCKET         = var.media_bucket_name
+      COGNITO_USER_POOL_ID = var.cognito_user_pool_id
     }
   }
 

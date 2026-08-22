@@ -17,6 +17,11 @@ def caller_sub(event: dict[str, Any]) -> str | None:
     return _claims(event).get("sub")
 
 
+def caller_username(event: dict[str, Any]) -> str | None:
+    claims = _claims(event)
+    return claims.get("username") or claims.get("cognito:username")
+
+
 def caller_groups(event: dict[str, Any]) -> list[str]:
     groups = _claims(event).get("cognito:groups", "")
     if not groups:

@@ -45,6 +45,11 @@ variable "cognito_user_pool_id" {
   description = "Cognito user pool ID for the JWT authorizer."
 }
 
+variable "cognito_user_pool_arn" {
+  type        = string
+  description = "Cognito user pool ARN for scoped role-assignment permission."
+}
+
 variable "cognito_user_pool_client_id" {
   type        = string
   description = "Cognito user pool client ID (JWT audience)."

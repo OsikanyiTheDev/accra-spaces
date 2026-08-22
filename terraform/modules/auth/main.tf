@@ -49,7 +49,8 @@ resource "aws_cognito_user_pool_client" "web" {
   logout_urls                          = var.logout_urls
   supported_identity_providers         = ["COGNITO"]
 
-  # Note: passwordless email-OTP (custom challenge) is the planned sign-in path.
+  # V1 decision: verified email + password. Browser sign-in uses the Hosted UI
+  # authorization-code flow with PKCE; these direct flows support recovery and SDK clients.
   explicit_auth_flows = [
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_SRP_AUTH",

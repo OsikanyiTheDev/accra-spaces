@@ -13,6 +13,7 @@ USER_PK = "USER#{sub}"
 FAV_SK = "FAV#{listing_id}"
 SEARCH_SK = "SEARCH#{search_id}"
 REQUEST_SK = "REQ#{request_id}"
+PROFILE_SK = "PROFILE"
 
 
 def now_iso() -> str:
@@ -92,6 +93,29 @@ class ListingsRepository:
             ExpressionAttributeValues={":pk": USER_PK.format(sub=sub), ":sk": sk_prefix},
         )
         return result.get("Items", [])
+
+    def claim_user_role(self, sub: str, role: str) -> bool:
+        """Atomically persist a user's one-time self-declared posting role."""
+        try:
+            self._table.put_item(
+                Item={
+                    "PK": USER_PK.format(sub=sub),
+                    "SK": PROFILE_SK,
+                    "kind": "user_profile",
+                    "role": role,
+                    "role_selected_at": now_iso(),
+                },
+                ConditionExpression="attribute_not_exists(PK)",
+            )
+            return True
+        except Exception as exc:
+            code = getattr(exc, "response", {}).get("Error", {}).get("Code")
+            if code == "ConditionalCheckFailedException":
+                return False
+            raise
+
+    def rollback_user_role(self, sub: str) -> None:
+        self.delete_user_item(sub, PROFILE_SK)
 
     # --- reports ---
 

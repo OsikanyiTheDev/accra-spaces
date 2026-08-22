@@ -149,6 +149,17 @@ class InteractionValidationTests(unittest.TestCase):
         self.assertTrue(any("reason" in e for e in errors))
 
 
+class RoleSelectionTests(unittest.TestCase):
+    def test_landlord_role_is_normalised_for_cognito_group(self):
+        clean, errors = v.validate_role_selection({"role": "landlord"})
+        self.assertEqual(errors, [])
+        self.assertEqual(clean["role"], "Landlord")
+
+    def test_unknown_role_is_rejected(self):
+        _, errors = v.validate_role_selection({"role": "verified_agent"})
+        self.assertTrue(any("role" in error for error in errors))
+
+
 class SavedSearchTests(unittest.TestCase):
     def test_saved_search_matches_search_vocabulary(self):
         clean, errors = v.validate_saved_search({"area": "Spintex", "type": "apartment", "mode": "rent"})
