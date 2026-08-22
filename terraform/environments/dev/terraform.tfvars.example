@@ -1,0 +1,21 @@
+# Copy to terraform.tfvars and fill in real values.
+# Replace ACCOUNT_ID after running: aws sts get-caller-identity
+media_bucket_name = "accraspaces-media-ACCOUNT_ID-2026"
+
+allowed_origins = [
+  "http://localhost:3000"
+]
+
+alert_email        = "you@example.com"
+monthly_budget_usd = 10
+
+# Must be globally unique across all Cognito user pools.
+cognito_domain_prefix = "accraspaces-dev-ACCOUNT_ID"
+
+auth_callback_urls = [
+  "http://localhost:3000"
+]
+
+auth_logout_urls = [
+  "http://localhost:3000"
+]

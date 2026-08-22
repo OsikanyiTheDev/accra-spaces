@@ -1,0 +1,5 @@
+# Optional — only needed if you want a dedicated state bucket instead of
+# reusing the existing osikanyithedev-terraform-state-2026 bucket.
+state_bucket_name = "accraspaces-terraform-state-2026"
+lock_table_name   = "accraspaces-terraform-locks"
+region            = "us-east-1"
