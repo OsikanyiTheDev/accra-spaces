@@ -8,6 +8,7 @@ import { ListingActions } from "@/components/listing-actions";
 import { SourceNotice } from "@/components/source-notice";
 import { AMENITIES } from "@/lib/constants";
 import { getListing } from "@/lib/api";
+import { getSession } from "@/lib/auth";
 import { commissionLabel, maintenanceLabel, readableDate, typeLabel } from "@/lib/format";
 
 interface PageProps { params: Promise<{ id: string }> }
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ListingPage({ params }: PageProps) {
   const { id } = await params;
-  const { listing, source } = await getListing(id);
+  const [{ listing, source }, session] = await Promise.all([getListing(id), getSession()]);
   if (!listing) notFound();
 
   const amenityLabels = new Map(AMENITIES);
@@ -95,7 +96,7 @@ export default async function ListingPage({ params }: PageProps) {
             </article>
           </div>
           <div className="detail-sidebar">
-            <ListingActions listing={listing} source={source} />
+            <ListingActions listing={listing} source={source} signedIn={Boolean(session)} />
             <div className="poster-card">
               <span className="poster-avatar">{listing.poster.name?.charAt(0) ?? "A"}</span>
               <div><small>Posted by</small><strong>{listing.poster.name ?? "Property poster"}</strong><span>{listing.poster.role === "agent" ? "Agent account" : "Landlord account"}</span></div>
