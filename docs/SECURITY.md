@@ -14,12 +14,14 @@ The seeker provides: email (via Cognito), and contact details only when making a
 
 ## Authentication and session controls
 
-- Cognito Hosted UI owns password entry, email verification and recovery; Accra Spaces does not receive or store user passwords.
+- Cognito Hosted UI owns password entry, email verification and recovery; Accra Spaces does not receive or store user passwords. The public client uses SRP and does not enable direct `USER_PASSWORD_AUTH`.
 - OAuth uses the authorization-code flow with PKCE plus a short-lived, HTTP-only state cookie.
+- MFA is optional but explicitly supports software-token TOTP; SMS MFA is not configured.
 - The callback verifies the ID token signature, issuer, audience and token use against Cognito JWKS before creating a session.
 - ID and access tokens use short-lived `HttpOnly`, `SameSite=Lax`, path-scoped cookies; no token is exposed to browser JavaScript and no unused refresh token is retained.
 - Authenticated browser requests pass through an explicit route/method allowlist, not an open proxy. API Gateway independently verifies the access token.
 - Landlord/Agent is a one-time self-declared capability. A conditional DynamoDB write prevents role changes or duplicate selection before the matching Cognito group is added. Admin remains manually assigned.
+- Only the dedicated `select_role` Lambda execution role can call `AdminAddUserToGroup`; public browsing and listing handlers have no Cognito administration permission.
 
 ## Public API controls
 

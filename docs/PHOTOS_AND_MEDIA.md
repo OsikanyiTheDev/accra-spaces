@@ -11,7 +11,7 @@ Day and night photos exist to show lighting, street visibility and street presen
 - **Constrained uploads:** presigned POST limited to JPEG, PNG and WebP, maximum 5 MB, expiry 5 minutes, key bound to the poster's listing.
 - **EXIF processing is not implemented yet.** Server-side stripping/scanning is a launch or v2 task; the current code must not claim that location/device metadata has been removed.
 - **Watermarking** (planned, v2): server-side image processing to discourage casual reuse. It is not shipped and the product makes no protection claim.
-- **Retention today:** Terraform aborts incomplete multipart uploads after 7 days and expires objects under `pending/` after 30 days. Active-listing removal/retention automation is not implemented yet and must be decided before real inventory is accepted.
+- **Retention today:** Terraform aborts incomplete multipart uploads after 7 days, expires objects under `pending/` after 30 days, and expires noncurrent media versions after 30 days. Active-listing removal and abandoned current-object cleanup are not automated yet and must be decided before real inventory is broadly accepted.
 
 ## Bucket layout
 

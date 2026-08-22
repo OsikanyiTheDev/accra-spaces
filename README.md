@@ -29,7 +29,8 @@ It is intentionally an **independent, community-driven product**, not a governme
 - One-time self-selection of Landlord or Agent, always labelled self-declared rather than verified
 - Transparent posting form for role, commission, deposit and maintenance terms, wired to authenticated API and media-upload routes
 - Python Lambda handlers for public search/detail, listing CRUD, signed media access, viewing requests, offers, favorites, saved searches, role selection, reports and moderation
-- Terraform modules for DynamoDB, private S3, Cognito, Lambda/API Gateway, observability and a $10/month budget guardrail
+- Terraform modules for DynamoDB, private S3, Cognito with optional TOTP, Lambda/API Gateway, cost-conscious observability and a $10/month budget alert
+- Dedicated least-privilege IAM role for one-time Cognito posting-role selection
 - CI gates for frontend lint/types/build, Lambda tests, and Terraform formatting/validation
 
 > **Deployment status:** no AWS infrastructure has been deployed and no real property inventory is claimed. Terraform will be planned on the owner's computer and reviewed before any apply.

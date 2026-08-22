@@ -4,7 +4,7 @@
 
 - [x] Product identity, repository, README and product boundary
 - [x] Architecture, safety and media decisions documented
-- [x] Terraform modules: listings store, private photo storage, Cognito auth, Lambda/API, observability and budget guardrail
+- [x] Terraform modules: listings store, private photo storage, Cognito auth, Lambda/API, observability and account-level budget alert
 - [x] Responsive Next.js frontend with search, cards, detail, posting, account and saved-item flows
 - [x] Lambda API handlers and validation tests
 - [x] CI quality gate for frontend, Lambda and Terraform
@@ -15,9 +15,10 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 
 - [ ] Bootstrap / confirm Terraform remote state (reuse `osikanyithedev-terraform-state-2026` with a unique key)
 - [ ] Configure a unique photo bucket name and Cognito domain prefix
-- [ ] Generate and review a saved Terraform plan together
-- [ ] Deploy DynamoDB, private S3, Cognito, Lambda and HTTP API only after plan approval
-- [ ] Confirm operational email subscription and the $10/month budget guardrail
+- [x] Review the initial saved plan; reject it pending MFA, IAM, alarm, throttling and media hardening
+- [ ] Generate and review a new saved Terraform plan from the hardening commit
+- [ ] Deploy DynamoDB, private S3, Cognito, Lambda and HTTP API only after the new plan is approved
+- [ ] Confirm operational email subscription and the $10/month account-level budget alert
 - [ ] Configure the final Vercel origin in API/S3 CORS
 
 **No apply until the plan has been reviewed together. See docs/LOCAL_AWS_DEPLOYMENT.md.**

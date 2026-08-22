@@ -51,6 +51,7 @@ Edit `terraform.tfvars`:
 - `auth_callback_urls` — `["http://localhost:3000/api/auth/callback"]` for the first local test
 - `auth_logout_urls` — `["http://localhost:3000/"]` for the first local test
 - `monthly_budget_usd = 10`
+- `api_throttling_rate_limit = 2` and `api_throttling_burst_limit = 5` for cost-conscious dev traffic
 
 ## 4. Init, format, validate (no AWS writes)
 
@@ -67,11 +68,11 @@ terraform plan -out=tfplan
 terraform show tfplan
 ```
 
-Review it. Expected: DynamoDB table, private S3 bucket, Cognito user pool/domain/groups, Lambda functions, HTTP API, log groups, alarms, $10 budget. **Not expected:** EC2, NAT Gateway, RDS, ALB, VPC, or anything else.
+Review it. Expected: DynamoDB table, private S3 bucket, Cognito user pool/domain/groups with optional TOTP, Lambda functions, HTTP API, log groups, one API 5xx alarm/SNS path, and the $10 budget alert. The `select_role` Lambda must have its own restricted IAM role; the shared API role must have no Cognito administration action. **Not expected:** per-Lambda alarms in dev, EC2, NAT Gateway, RDS, ALB, VPC, OpenSearch, or anything else.
 
 ## 6. Before apply
 
-Send the readable `terraform show tfplan` output for review. Confirm: correct account ID, unique bucket + Cognito domain, `accra-spaces/dev/terraform.tfstate`, correct alert email, intentional budget guardrail, no unexpected billable resources. Only then:
+Send the readable `terraform show tfplan` output for review. Confirm: correct account ID, unique bucket + Cognito domain, `accra-spaces/dev/terraform.tfstate`, correct alert email, intentional account-level budget alert (not a hard cap), no unexpected billable resources. Only then:
 
 ```bash
 terraform apply tfplan
