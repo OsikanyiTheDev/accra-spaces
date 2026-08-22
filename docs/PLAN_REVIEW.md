@@ -21,17 +21,29 @@ It was **not approved for apply**. Review identified these changes:
 
 The original saved `tfplan` is invalid after these changes and must never be applied.
 
-## Next review gate
+## Hardened development plan — approved and applied
 
-After pulling the hardening commit, create a new saved plan. Expected differences from the first plan:
+The replacement plan reported:
 
-- Cognito user pool includes software-token MFA configuration.
-- Cognito client has SRP + refresh flows, without `ALLOW_USER_PASSWORD_AUTH`.
-- `select_role` uses a dedicated IAM role with only CloudWatch logging, DynamoDB `PutItem/DeleteItem` on the listings table, and `AdminAddUserToGroup` on the Accra Spaces user pool.
-- Shared API role has no Cognito administration permission.
-- API stage shows `throttling_rate_limit = 2` and `throttling_burst_limit = 5`.
-- No per-Lambda CloudWatch error alarms in dev.
-- Media lifecycle includes 30-day noncurrent-version expiration.
-- Still zero changes and zero destroys for the first deployment.
+```text
+Plan: 120 to add, 0 to change, 0 to destroy.
+```
+
+Review confirmed software-token MFA, SRP without direct `USER_PASSWORD_AUTH`, a dedicated restricted role-selection IAM role, API throttling of 2 sustained/5 burst, no per-Lambda alarms, and 30-day noncurrent-media expiration. The exact saved plan was approved and applied successfully on 22 August 2026.
+
+Post-apply verification established these facts:
+
+- Terraform reported `120 added, 0 changed, 0 destroyed`.
+- The public health route returned `status: ok` on Python 3.12.
+- Public listing search returned an empty list; no inventory was invented or seeded.
+- JWT-protected posting returned 401 without a token.
+- IAM-only moderation returned 403 without a signed AWS request.
+- Localhost CORS was present and an unapproved origin received no allow-origin header.
+- Cognito discovery and email/password sign-in were available.
+- The media bucket denied anonymous reads.
 
 The AWS budget is an alert, not a hard spending cap, and currently observes account-level AWS cost rather than only Accra Spaces resources.
+
+## Current review gate — authentication branding
+
+Cognito Hosted UI branding is Terraform-managed. Before applying the branding change, review a new plan. Expected scope: an in-place domain setting confirmation if needed and one Cognito UI-customization resource containing only the Accra Spaces logo and CSS. No data, API, Lambda, DynamoDB or S3 replacement is expected.

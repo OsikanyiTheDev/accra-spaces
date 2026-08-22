@@ -4,9 +4,9 @@
 
 | Env | Frontend | Backend | Purpose |
 | --- | --- | --- | --- |
-| dev | Vercel (planned) | AWS `us-east-1`, serverless (planned) | Development target |
+| dev | Local Next.js connected; Vercel planned | AWS `us-east-1`, serverless deployed | Integration testing |
 
-**Current status:** neither the AWS environment nor a Vercel production deployment is claimed by this repository. The app runs locally with labelled illustrative data until deployment decisions are approved.
+**Current status:** the reviewed AWS development environment is deployed and its public/security boundary checks pass. Authentication has been tested locally through account opening. There is no Vercel production deployment or real property inventory yet.
 
 ## Frontend (Vercel)
 
@@ -18,12 +18,13 @@
 
 ## Backend (AWS)
 
-Serverless only by design: DynamoDB (PAY_PER_REQUEST), private S3, Lambda (Python 3.12), API Gateway HTTP API, Cognito, CloudWatch, optional SNS/SES later.
+Serverless only by design: DynamoDB (PAY_PER_REQUEST), private S3, Lambda (Python 3.12), API Gateway HTTP API, Cognito, CloudWatch and an SNS alarm path are deployed. SES remains deferred.
 
 There is **no EC2, NAT Gateway, RDS or ALB** anywhere in this project. Remote state is shared deliberately: the existing `osikanyithedev-terraform-state-2026` bucket, with the unique key `accra-spaces/dev/terraform.tfstate`.
 
 ## Timeline gates
 
-- **Before any apply:** review the readable `terraform show tfplan` together (see LOCAL_AWS_DEPLOYMENT.md). Confirm account ID, bucket name uniqueness, Cognito domain prefix uniqueness, allowed origins, alert email, and that no unexpected billable resources appear.
-- **After apply:** set frontend env vars, then add the Vercel origin to CORS in a second reviewed change.
+- **Before every future apply:** review the readable `terraform show tfplan` together (see LOCAL_AWS_DEPLOYMENT.md). Reject any unexpected replacement, destroy or billable service.
+- **Current local integration:** frontend environment values are connected to the deployed API and Cognito identifiers.
+- **Next deployment change:** add the final Vercel origin to API/S3 CORS and Cognito callback/logout URLs through a separate reviewed plan.
 - **Never** run `terraform destroy` or rotate the shared state bucket casually — discuss first.

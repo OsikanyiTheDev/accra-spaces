@@ -11,19 +11,18 @@
 
 The frontend uses clearly labelled illustrative examples until a real API is configured. Completion here means implemented and validated in code—not deployed infrastructure, users or live inventory.
 
-## Stage 1 — AWS Dev Environment (not started)
+## Stage 1 — AWS Dev Environment (deployed; frontend production pending)
 
-- [ ] Bootstrap / confirm Terraform remote state (reuse `osikanyithedev-terraform-state-2026` with a unique key)
-- [ ] Configure a unique photo bucket name and Cognito domain prefix
-- [x] Review the initial saved plan; reject it pending MFA, IAM, alarm, throttling and media hardening
-- [ ] Generate and review a new saved Terraform plan from the hardening commit
-- [ ] Deploy DynamoDB, private S3, Cognito, Lambda and HTTP API only after the new plan is approved
-- [ ] Confirm operational email subscription and the $10/month account-level budget alert
-- [ ] Configure the final Vercel origin in API/S3 CORS
+- [x] Confirm Terraform remote state in `osikanyithedev-terraform-state-2026` using the unique `accra-spaces/dev/terraform.tfstate` key
+- [x] Configure an account-specific private photo bucket and Cognito domain prefix
+- [x] Review and reject the initial 135-resource plan pending security/cost hardening
+- [x] Review and approve the hardened plan: 120 add, 0 change, 0 destroy
+- [x] Deploy DynamoDB, private S3, Cognito, Lambda and HTTP API from the exact approved saved plan
+- [x] Verify public health, empty-listing response, protected-route rejection, CORS, Cognito discovery and blocked public S3 access
+- [ ] Confirm the SNS alarm email subscription
+- [ ] Configure the final Vercel origin in API/S3 CORS and Cognito callback/logout URLs through another reviewed plan
 
-**No apply until the plan has been reviewed together. See docs/LOCAL_AWS_DEPLOYMENT.md.**
-
-## Stage 2 — Public Search & Listing Experience (implemented; awaiting deployment/data)
+## Stage 2 — Public Search & Listing Experience (API deployed; awaiting real inventory)
 
 - [x] `GET /listings` search with area / type / rent-vs-sale / price range / beds filters
 - [x] Correct newest and broad/narrow price sorting with DynamoDB indexes
@@ -43,7 +42,8 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 - [x] Authenticated viewing requests, offers, saved searches and favorites
 - [x] Basic public report + AWS IAM moderation path
 - [x] Frontend posting, viewing and offer actions connected through an allowlisted server proxy
-- [ ] Exercise signup, role selection, posting and request flows against the deployed dev environment
+- [x] Exercise signup, email-code confirmation, sign-in and account opening against the deployed dev environment
+- [ ] Exercise one-time role selection, listing publication, photo upload and seeker request flows
 - [ ] Add owner-facing request management UI
 
 ## v2+ (deliberately deferred)

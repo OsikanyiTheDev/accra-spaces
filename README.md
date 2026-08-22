@@ -25,7 +25,7 @@ It is intentionally an **independent, community-driven product**, not a governme
 - Structured filters for area, property type, rent/sale, price, bedrooms and sorting
 - Clearly labelled illustrative inventory when no API is configured—never presented as real availability
 - Local browser favorites, saved searches and listing drafts
-- Cognito verified-email/password authorization-code flow with PKCE, verified ID tokens and HTTP-only cookies
+- Branded Cognito verified-email/password sign-in with email-code confirmation, PKCE, verified ID tokens and HTTP-only cookies
 - One-time self-selection of Landlord or Agent, always labelled self-declared rather than verified
 - Transparent posting form for role, commission, deposit and maintenance terms, wired to authenticated API and media-upload routes
 - Python Lambda handlers for public search/detail, listing CRUD, signed media access, viewing requests, offers, favorites, saved searches, role selection, reports and moderation
@@ -33,7 +33,7 @@ It is intentionally an **independent, community-driven product**, not a governme
 - Dedicated least-privilege IAM role for one-time Cognito posting-role selection
 - CI gates for frontend lint/types/build, Lambda tests, and Terraform formatting/validation
 
-> **Deployment status:** no AWS infrastructure has been deployed and no real property inventory is claimed. Terraform will be planned on the owner's computer and reviewed before any apply.
+> **Deployment status:** the AWS development backend was deployed from a reviewed Terraform plan on 22 August 2026, and its public health/listing endpoints were verified. The frontend is connected locally for authentication testing; no Vercel production deployment, real property inventory, users metric or production-launch claim is made.
 
 ## Preview-data behaviour
 
@@ -98,7 +98,7 @@ Do not apply until the readable plan has been reviewed — see [docs/LOCAL_AWS_D
 - No invented verification: the badge reflects **listing completeness** (day+night photos, Digital Address, maintenance policy), with real KYC deliberately deferred
 - Exact contact information is absent from list/search responses and appears only on a selected published listing
 - “Never pay viewing fees; verify before deposits” guidance is visible in the product
-- Photo storage is private, type-limited and size-limited; browser uploads use constrained presigned requests after deployment
+- Development photo storage is private, type-limited and size-limited; browser uploads use constrained presigned requests, while EXIF processing remains explicitly unimplemented
 - No invented metrics, users, clients, partners, certifications or authority integrations
 
 ## Built by

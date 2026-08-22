@@ -6,6 +6,10 @@ Accra Spaces uses **Amazon Cognito verified email + password**. Passwordless ema
 
 Passwords, confirmation codes and recovery stay inside Cognito Hosted UI. The application receives OAuth tokens only after Cognito completes authentication.
 
+## Branded sign-in experience
+
+The Cognito classic Hosted UI remains the security boundary, but Terraform applies the Accra Spaces wordmark and a constrained CSS theme from `terraform/modules/auth/assets/`. The palette uses cream, walnut, earth and gold to match the product frontend instead of Cognito's default blue styling. This is presentation-only: callback validation, PKCE and token handling remain unchanged.
+
 ## Browser flow
 
 ```text
