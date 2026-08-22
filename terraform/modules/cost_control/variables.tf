@@ -5,7 +5,7 @@ variable "name_prefix" {
 
 variable "monthly_budget_usd" {
   type        = number
-  description = "Monthly budget limit in USD."
+  description = "Monthly account-level budget alert threshold in USD; AWS Budgets does not cap spending."
   default     = 10
 }
 

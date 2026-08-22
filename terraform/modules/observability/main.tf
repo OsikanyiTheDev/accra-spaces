@@ -45,7 +45,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
-  for_each = var.alert_email == "" ? {} : { for name in var.lambda_function_names : name => name }
+  for_each = var.alert_email == "" || !var.enable_lambda_error_alarms ? {} : { for name in var.lambda_function_names : name => name }
 
   alarm_name  = "${var.name_prefix}-${each.key}-errors-alarm"
   namespace   = "AWS/Lambda"

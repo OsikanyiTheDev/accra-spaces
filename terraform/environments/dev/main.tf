@@ -41,14 +41,17 @@ module "api" {
   cognito_user_pool_id        = module.auth.user_pool_id
   cognito_user_pool_arn       = module.auth.user_pool_arn
   cognito_user_pool_client_id = module.auth.user_pool_client_id
+  throttling_burst_limit      = var.api_throttling_burst_limit
+  throttling_rate_limit       = var.api_throttling_rate_limit
   tags                        = local.common_tags
 }
 
 module "observability" {
-  source                    = "../../modules/observability"
-  name_prefix               = local.name_prefix
-  lambda_function_names     = module.api.function_names
-  api_access_log_group_name = module.api.api_access_log_group_name
-  alert_email               = var.alert_email
-  tags                      = local.common_tags
+  source                     = "../../modules/observability"
+  name_prefix                = local.name_prefix
+  lambda_function_names      = module.api.function_names
+  api_access_log_group_name  = module.api.api_access_log_group_name
+  enable_lambda_error_alarms = false
+  alert_email                = var.alert_email
+  tags                       = local.common_tags
 }

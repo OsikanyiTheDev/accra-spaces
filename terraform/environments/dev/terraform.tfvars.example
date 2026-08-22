@@ -9,6 +9,10 @@ allowed_origins = [
 alert_email        = "you@example.com"
 monthly_budget_usd = 10
 
+# Cost-conscious development throttling. Raise only after reviewing expected traffic.
+api_throttling_rate_limit  = 2
+api_throttling_burst_limit = 5
+
 # Must be globally unique across all Cognito user pools.
 cognito_domain_prefix = "accraspaces-dev-ACCOUNT_ID"
 

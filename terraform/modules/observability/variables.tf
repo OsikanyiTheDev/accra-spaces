@@ -13,6 +13,12 @@ variable "api_access_log_group_name" {
   description = "CloudWatch log group for API Gateway access logs."
 }
 
+variable "enable_lambda_error_alarms" {
+  type        = bool
+  description = "Create one CloudWatch error alarm per Lambda function. Disabled in cost-conscious dev."
+  default     = false
+}
+
 variable "alert_email" {
   type        = string
   description = "Email for alarm notifications. Empty disables the topic."

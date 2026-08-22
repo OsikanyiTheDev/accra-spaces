@@ -79,4 +79,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "media" {
       days = 30
     }
   }
+
+  rule {
+    id     = "expire-noncurrent-media-versions"
+    status = "Enabled"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 30
+    }
+  }
 }

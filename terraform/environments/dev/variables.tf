@@ -23,8 +23,30 @@ variable "alert_email" {
 
 variable "monthly_budget_usd" {
   type        = number
-  description = "Monthly AWS budget guardrail in USD."
+  description = "Monthly account-level AWS budget alert threshold in USD; not a hard spending cap."
   default     = 10
+}
+
+variable "api_throttling_burst_limit" {
+  type        = number
+  description = "Short API request burst allowed in the dev environment."
+  default     = 5
+
+  validation {
+    condition     = var.api_throttling_burst_limit >= 1 && floor(var.api_throttling_burst_limit) == var.api_throttling_burst_limit
+    error_message = "api_throttling_burst_limit must be a positive whole number."
+  }
+}
+
+variable "api_throttling_rate_limit" {
+  type        = number
+  description = "Sustained API requests per second allowed in the dev environment."
+  default     = 2
+
+  validation {
+    condition     = var.api_throttling_rate_limit > 0
+    error_message = "api_throttling_rate_limit must be greater than zero."
+  }
 }
 
 variable "cognito_domain_prefix" {
