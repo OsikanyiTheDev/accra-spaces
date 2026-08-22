@@ -38,7 +38,7 @@ locals {
     }
     request_upload = {
       handler   = "handlers.request_upload.lambda_handler"
-      route_key = "POST /media/presign"
+      route_key = "POST /listings/{id}/media/presign"
       auth      = "JWT"
     }
     create_viewing_request = {

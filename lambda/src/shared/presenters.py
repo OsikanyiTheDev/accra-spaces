@@ -59,5 +59,4 @@ def detail(item: dict[str, Any]) -> dict[str, Any]:
     base["amenities"] = item.get("amenities", [])
     base["day_photos"] = item.get("day_photos", [])
     base["night_photos"] = item.get("night_photos", [])
-    base["owner_sub"] = item.get("owner_sub")
     return base

@@ -57,6 +57,23 @@ class SearchQueryTests(unittest.TestCase):
         self.assertEqual(query["KeyConditionExpression"], "GSI1PK = :gpk")
         self.assertEqual(query["ExpressionAttributeValues"][":gpk"], "APARTMENT#RENT")
         self.assertTrue(query["ScanIndexForward"])
+        self.assertNotIn("#type", query.get("ExpressionAttributeNames", {}))
+
+    def test_broad_price_sort_uses_price_index(self):
+        clean, errors = validate_search_params({"sort": "price_desc", "area": "Osu"})
+        self.assertEqual(errors, [])
+        query = build_browse_query(clean)
+        self.assertEqual(query["IndexName"], "price-index")
+        self.assertEqual(query["KeyConditionExpression"], "GSI3PK = :gpk")
+        self.assertEqual(query["ExpressionAttributeValues"][":gpk"], "PUBLISHED")
+        self.assertFalse(query["ScanIndexForward"])
+
+    def test_reserved_filter_names_use_placeholders(self):
+        clean, _ = validate_search_params({"sort": "newest", "type": "office", "mode": "sale"})
+        query = build_browse_query(clean)
+        self.assertIn("#type = :type", query["FilterExpression"])
+        self.assertEqual(query["ExpressionAttributeNames"]["#type"], "type")
+        self.assertEqual(query["ExpressionAttributeNames"]["#mode"], "sale_mode")
 
     def test_cursor_roundtrip(self):
         cursor = encode_cursor({"PK": "LISTING#x", "SK": "METADATA"})
@@ -130,6 +147,31 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(len(favorites), 2)
         searches = self.repo.query_user_items("sub-1", "SEARCH#")
         self.assertEqual(len(searches), 1)
+
+
+class MediaPolicyTests(unittest.TestCase):
+    def test_presigned_post_pins_the_validated_content_type(self):
+        from unittest.mock import patch
+
+        from shared.media import presign_upload
+
+        with patch("shared.media._client") as client_factory:
+            client_factory.return_value.generate_presigned_post.return_value = {
+                "url": "https://example.invalid/upload",
+                "fields": {"key": "generated"},
+            }
+            result = presign_upload(
+                bucket="private-media",
+                listing_id="lst_1",
+                kind="day",
+                content_type="image/jpeg",
+                size_bytes=1024,
+            )
+
+        call = client_factory.return_value.generate_presigned_post.call_args.kwargs
+        self.assertEqual(call["Fields"]["Content-Type"], "image/jpeg")
+        self.assertIn(["eq", "$Content-Type", "image/jpeg"], call["Conditions"])
+        self.assertEqual(result["content_type"], "image/jpeg")
 
 
 if __name__ == "__main__":

@@ -44,6 +44,24 @@ class ListingValidationTests(unittest.TestCase):
         _, errors = v.validate_listing_payload(payload)
         self.assertTrue(any("area" in e for e in errors))
 
+    def test_area_is_required_for_new_listing(self):
+        payload = base_listing()
+        payload.pop("area")
+        _, errors = v.validate_listing_payload(payload)
+        self.assertIn("area is required", errors)
+
+    def test_poster_requires_contact_number(self):
+        payload = base_listing()
+        payload["poster"] = {"name": "Ama", "role": "landlord"}
+        _, errors = v.validate_listing_payload(payload)
+        self.assertTrue(any("WhatsApp or phone" in e for e in errors))
+
+    def test_boolean_is_not_accepted_as_number(self):
+        payload = base_listing()
+        payload["price_ghs"] = True
+        _, errors = v.validate_listing_payload(payload)
+        self.assertTrue(any("price_ghs" in e for e in errors))
+
     def test_bad_digital_address_rejected(self):
         payload = base_listing()
         payload["digital_address"] = "not-an-address"

@@ -35,14 +35,18 @@ PK = LISTING#{listing_id}
 SK = METADATA
 ```
 
-Two global secondary indexes:
+Three global secondary indexes:
 
 ```text
 GSI browse-index:       GSI1PK = {TYPE}#{SALE_MODE}   (e.g. APARTMENT#RENT)
                         GSI1SK = price_ghs (N)
-GSI moderation-index:   GSI2PK = STATUS
+GSI status-index:       GSI2PK = STATUS
                         GSI2SK = updated_at (S)
+GSI price-index:        GSI3PK = STATUS
+                        GSI3SK = price_ghs (N)
 ```
+
+The dedicated price index keeps low-to-high and high-to-low sorting correct even when a seeker has not selected both a property type and rent/sale mode.
 
 Listing status: `draft → pending → published → disabled | sold` (v1 keeps moderation minimal: report + disable).
 
@@ -59,7 +63,7 @@ Search in v1 uses the browse index plus server-side filtering; the API contract 
 | `GET /listings/{id}` | Public | Public detail (contact masked) |
 | `POST /listings` | JWT | Create listing (Landlord/Agent) |
 | `PATCH /listings/{id}` | JWT | Update own listing |
-| `POST /media/presign` | JWT | Constrained presigned photo upload (day/night) |
+| `POST /listings/{id}/media/presign` | JWT | Constrained presigned photo upload (day/night) |
 | `POST /listings/{id}/viewing-requests` | JWT | Structured viewing request (date/time + note) |
 | `POST /listings/{id}/offers` | JWT | Offer (GHS amount + note) |
 | `POST /listings/{id}/report` | Public (throttled) | Report a listing |

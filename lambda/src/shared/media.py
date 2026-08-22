@@ -28,10 +28,10 @@ def presign_upload(bucket: str, listing_id: str, kind: str, content_type: str, s
     post = _client().generate_presigned_post(
         Bucket=bucket,
         Key=key,
-        Fields={},
+        Fields={"Content-Type": content_type},
         Conditions=[
             ["content-length-range", 1, c.MAX_PHOTO_BYTES],
-            ["content-type", content_type],
+            ["eq", "$Content-Type", content_type],
         ],
         ExpiresIn=300,
     )

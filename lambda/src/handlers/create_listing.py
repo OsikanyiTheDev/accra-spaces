@@ -22,9 +22,14 @@ def lambda_handler(event, context):
     if errors:
         return http.bad_request(errors)
 
+    account_role = authz.role_from_groups(groups)
+    if clean["poster"].get("role") != account_role:
+        return http.bad_request(["poster.role must match the signed-in account role"])
+
     listing_id = new_id("lst_")
     timestamp = now_iso()
     poster = clean["poster"]
+    poster["role"] = account_role
     poster["sub"] = sub
 
     item = {
@@ -57,6 +62,8 @@ def lambda_handler(event, context):
         "GSI1SK": clean["price_ghs"],
         "GSI2PK": "DRAFT",
         "GSI2SK": timestamp,
+        "GSI3PK": "DRAFT",
+        "GSI3SK": clean["price_ghs"],
     }
 
     repo = ListingsRepository(os.environ.get("LISTINGS_TABLE", "accraspaces-dev-listings"))

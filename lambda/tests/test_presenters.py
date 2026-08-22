@@ -51,12 +51,14 @@ class PresenterTests(unittest.TestCase):
         self.assertEqual(s["poster"]["role"], "agent")
         self.assertEqual(s["cover_key"], "listings/lst_1/day/a.jpg")
 
-    def test_detail_exposes_poster_contact(self):
+    def test_detail_exposes_poster_contact_but_not_internal_owner_id(self):
         d = detail(full_item())
         self.assertEqual(d["poster"]["whatsapp"], "+233241234567")
         self.assertEqual(d["poster"]["agent_commission"]["type"], "one_month_rent")
         self.assertEqual(len(d["day_photos"]), 2)
         self.assertEqual(d["digital_address"], "GA-100-0020")
+        self.assertNotIn("owner_sub", d)
+        self.assertNotIn("sub-123", json_repr(d))
 
     def test_completeness_present_in_both(self):
         for presenter in (summary, detail):

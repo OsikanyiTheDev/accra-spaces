@@ -34,6 +34,9 @@ def _int(value: Any, field: str, low: int, high: int, errors: list[str], require
         if required:
             errors.append(f"{field} is required")
         return None
+    if isinstance(value, bool):
+        errors.append(f"{field} must be a whole number")
+        return None
     try:
         parsed = int(value)
     except (TypeError, ValueError):
@@ -119,7 +122,7 @@ def validate_listing_payload(payload: dict[str, Any], *, require_poster: bool = 
     """Validate a listing create/update payload. Returns (clean, errors)."""
     errors: list[str] = []
     clean: dict[str, Any] = {}
-    updates_only = payload.pop("partial", False)
+    updates_only = bool(payload.get("partial", False))
 
     def field(required: bool) -> bool:
         return required and not updates_only
@@ -156,6 +159,8 @@ def validate_listing_payload(payload: dict[str, Any], *, require_poster: bool = 
             errors.append("area must be one of the supported Greater Accra areas")
         else:
             clean["area"] = canonical
+    elif not updates_only:
+        errors.append("area is required")
 
     address = payload.get("digital_address")
     if address not in (None, ""):
@@ -258,6 +263,9 @@ def _validate_poster(poster: dict[str, Any], errors: list[str]) -> dict[str, Any
             errors.append("poster.phone must be a phone number")
         else:
             clean["phone"] = phone
+
+    if "whatsapp" not in clean and "phone" not in clean:
+        errors.append("poster must include a WhatsApp or phone number")
 
     commission = poster.get("commission")
     if commission is not None:

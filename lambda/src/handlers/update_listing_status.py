@@ -35,6 +35,8 @@ def lambda_handler(event, context):
         "status": status,
         "GSI2PK": status.upper(),
         "GSI2SK": timestamp,
+        "GSI3PK": status.upper(),
+        "GSI3SK": item.get("price_ghs"),
         "updated_at": timestamp,
     })
     return http.ok({"id": listing_id, "status": status})

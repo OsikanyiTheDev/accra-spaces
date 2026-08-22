@@ -39,6 +39,12 @@ def lambda_handler(event, context):
     clean, errors = validate_listing_payload(payload)
     if errors:
         return http.bad_request(errors)
+    if "poster" in clean and not is_admin:
+        account_role = authz.role_from_groups(authz.caller_groups(event))
+        if clean["poster"].get("role") != account_role:
+            return http.bad_request(["poster.role must match the signed-in account role"])
+        clean["poster"]["role"] = account_role
+        clean["poster"]["sub"] = sub
 
     timestamp = now_iso()
     updates: dict = {}
@@ -58,9 +64,12 @@ def lambda_handler(event, context):
         price = updates.get("price_ghs", item.get("price_ghs"))
         updates["GSI1PK"] = f"{prop_type.upper()}#{mode.upper()}"
         updates["GSI1SK"] = price
+        updates["GSI3SK"] = price
     if "status" in updates:
         updates["GSI2PK"] = updates["status"].upper()
         updates["GSI2SK"] = timestamp
+        updates["GSI3PK"] = updates["status"].upper()
+        updates["GSI3SK"] = updates.get("price_ghs", item.get("price_ghs"))
 
     updated = repo.update_listing(listing_id, updates)
     return http.ok({"id": listing_id, "status": updated.get("status") if updated else None})
