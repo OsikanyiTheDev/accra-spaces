@@ -5,6 +5,10 @@ resource "aws_cognito_user_pool" "pool" {
   auto_verified_attributes = ["email"]
   mfa_configuration        = "OPTIONAL"
 
+  software_token_mfa_configuration {
+    enabled = true
+  }
+
   password_policy {
     minimum_length                   = 10
     require_lowercase                = true
@@ -49,12 +53,12 @@ resource "aws_cognito_user_pool_client" "web" {
   logout_urls                          = var.logout_urls
   supported_identity_providers         = ["COGNITO"]
 
-  # V1 decision: verified email + password. Browser sign-in uses the Hosted UI
-  # authorization-code flow with PKCE; these direct flows support recovery and SDK clients.
+  # Browser sign-in uses the Hosted UI authorization-code flow with PKCE.
+  # SRP supports Cognito-managed password authentication without enabling the
+  # direct USER_PASSWORD_AUTH flow for this public client.
   explicit_auth_flows = [
     "ALLOW_REFRESH_TOKEN_AUTH",
     "ALLOW_USER_SRP_AUTH",
-    "ALLOW_USER_PASSWORD_AUTH",
   ]
 }
 

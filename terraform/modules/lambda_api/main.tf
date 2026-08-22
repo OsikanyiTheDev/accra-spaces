@@ -147,6 +147,43 @@ resource "aws_iam_role_policy" "api_data_access" {
           "${var.media_bucket_arn}/pending/*",
         ]
       },
+    ]
+  })
+}
+
+resource "aws_iam_role" "role_selection" {
+  name = "${var.name_prefix}-select-role-lambda-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "lambda.amazonaws.com" }
+    }]
+  })
+
+  tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "role_selection_basic_execution" {
+  role       = aws_iam_role.role_selection.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "role_selection_access" {
+  name = "${var.name_prefix}-select-role-access"
+  role = aws_iam_role.role_selection.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "ClaimRoleOnce"
+        Effect   = "Allow"
+        Action   = ["dynamodb:PutItem", "dynamodb:DeleteItem"]
+        Resource = var.listings_table_arn
+      },
       {
         Sid      = "AssignSelfDeclaredPostingRole"
         Effect   = "Allow"
@@ -171,7 +208,7 @@ resource "aws_lambda_function" "api" {
   description      = "Accra Spaces ${replace(each.key, "_", " ")} API handler"
   filename         = data.archive_file.api.output_path
   source_code_hash = data.archive_file.api.output_base64sha256
-  role             = aws_iam_role.lambda.arn
+  role             = each.key == "select_role" ? aws_iam_role.role_selection.arn : aws_iam_role.lambda.arn
   handler          = each.value.handler
   runtime          = "python3.12"
   timeout          = 15
@@ -185,7 +222,13 @@ resource "aws_lambda_function" "api" {
     }
   }
 
-  depends_on = [aws_cloudwatch_log_group.lambda]
+  depends_on = [
+    aws_cloudwatch_log_group.lambda,
+    aws_iam_role_policy_attachment.basic_execution,
+    aws_iam_role_policy.api_data_access,
+    aws_iam_role_policy_attachment.role_selection_basic_execution,
+    aws_iam_role_policy.role_selection_access,
+  ]
 
   tags = merge(var.tags, {
     Name    = "${var.name_prefix}-${each.key}"
