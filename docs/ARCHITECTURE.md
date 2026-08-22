@@ -81,7 +81,7 @@ Search in v1 uses the browse index plus server-side filtering; the API contract 
 | Trust badge | **Completeness badge** (day+night photos, Digital Address, maintenance policy). No "verified" claims without verification. |
 | Contact | `wa.me` deep links + click-to-call; full number only on detail page |
 | GhanaPost address | Validated text field in v1; GPS lookup only after GhanaPost API access is registered |
-| Media | Private S3; presigned POST (JPEG/PNG/WebP ≤ 5 MB, 5-min expiry); day/night pair validation; EXIF stripping; watermarking via Lambda + sharp in v2 |
+| Media | Private S3; presigned POST (JPEG/PNG/WebP ≤ 5 MB, 5-min expiry); day/night pair validation. EXIF stripping/scanning and watermarking are not yet implemented and remain launch/v2 work. |
 | Search | DynamoDB GSI + server-side filtering (OpenSearch only if data demands) |
 | Alerts | Saved searches stored now; SES digest later |
 | Monetisation | None in v1 (no featured/boosted/paid placements) |

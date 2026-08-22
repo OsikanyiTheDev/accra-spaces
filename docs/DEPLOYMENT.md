@@ -4,7 +4,9 @@
 
 | Env | Frontend | Backend | Purpose |
 | --- | --- | --- | --- |
-| dev | Vercel preview/production (Hobby) | AWS `us-east-1`, serverless | Live development deployment |
+| dev | Vercel (planned) | AWS `us-east-1`, serverless (planned) | Development target |
+
+**Current status:** neither the AWS environment nor a Vercel production deployment is claimed by this repository. The app runs locally with labelled illustrative data until deployment decisions are approved.
 
 ## Frontend (Vercel)
 

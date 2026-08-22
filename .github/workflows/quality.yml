@@ -10,6 +10,20 @@ permissions:
   contents: read
 
 jobs:
+  frontend:
+    name: Frontend lint, types and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
   lambda-tests:
     name: Lambda validation tests
     runs-on: ubuntu-latest

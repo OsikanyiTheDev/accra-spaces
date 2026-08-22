@@ -2,7 +2,7 @@
 
 ## Product boundary
 
-Accra Spaces is a private, community-driven property discovery platform. It is not a government product, an estate agency, or a rental authority. The UI must never imply that a listing or a badge is an official endorsement.
+Accra Spaces is an independent, community-driven property discovery platform. It is not a government product, an estate agency, or a rental authority. The UI must never imply that a listing or a badge is an official endorsement.
 
 ## Data minimisation (MVP)
 
@@ -18,18 +18,18 @@ The seeker provides: email (via Cognito), and contact details only when making a
 - Lambda validation constrains all fields: type, sale mode, price range, beds, text lengths, digital-address pattern, GHS formatting.
 - Posting, media presign, viewing requests and offers require a Cognito JWT.
 - Moderation (`PATCH /admin/listings/{id}/status`) is AWS IAM authorized only.
-- Public list responses never include full phone numbers — contact is masked; the full number is returned only on the detail route for the seeker who opens that listing.
+- Public list responses include no phone or WhatsApp fields; full poster contact is returned only on the detail route for a published listing that a seeker deliberately opens.
 
 ## Contact privacy
 
-- Phone/WhatsApp: masked on cards (e.g. `+233 ** *** 1234`); full number available on the detail page as a deliberate action (WhatsApp CTA or call).
-- No listing phone number is returned by `GET /listings` (list endpoint) at all.
+- Phone/WhatsApp is absent from cards and `GET /listings`; the full number is available only on the published detail page as a deliberate action (WhatsApp CTA or call).
+- Internal owner identifiers are never exposed by either public presenter.
 
 ## Media controls
 
 - Private bucket: public access block, bucket-owner enforced, SSE, versioning.
 - Presigned POST: JPEG/PNG/WebP only, ≤ 5 MB, 5-minute expiry, key bound to listing.
-- EXIF stripped; watermarking and image scanning are v2 items (no claims before they exist).
+- EXIF stripping, image scanning and watermarking are not implemented; they remain launch/v2 work and are not claimed by the product.
 
 ## Trust labelling
 
