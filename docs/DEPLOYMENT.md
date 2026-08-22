@@ -11,8 +11,10 @@
 ## Frontend (Vercel)
 
 1. Import `OsikanyiTheDev/accra-spaces` into Vercel.
-2. Set `NEXT_PUBLIC_API_URL` from the API Gateway output (after the AWS deployment is reviewed).
-3. Add the production Vercel domain to `allowed_origins` in `terraform.tfvars` (a second, reviewed change — not the initial apply).
+2. After the reviewed AWS deployment, set `API_URL`, `NEXT_PUBLIC_API_URL`, `COGNITO_DOMAIN`, `COGNITO_CLIENT_ID`, `COGNITO_USER_POOL_ID`, `COGNITO_REGION` and `AUTH_BASE_URL` from Terraform outputs and the final Vercel origin.
+3. Add the exact production callback (`https://<vercel-origin>/api/auth/callback`) and logout URL (`https://<vercel-origin>/`) to Cognito variables.
+4. Add the production Vercel origin to `allowed_origins` for API/S3 CORS in a reviewed Terraform plan.
+5. Redeploy Vercel after environment changes, then exercise the checklist in [AUTHENTICATION.md](AUTHENTICATION.md).
 
 ## Backend (AWS)
 

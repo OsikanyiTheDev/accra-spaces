@@ -12,6 +12,15 @@ The seeker provides: email (via Cognito), and contact details only when making a
 
 **Sensitive data:** no financial account data, no national ID, no home address of the user, no payment details in v1. KYC documents are explicitly deferred to v2 and will live in their own isolated, high-restriction path.
 
+## Authentication and session controls
+
+- Cognito Hosted UI owns password entry, email verification and recovery; Accra Spaces does not receive or store user passwords.
+- OAuth uses the authorization-code flow with PKCE plus a short-lived, HTTP-only state cookie.
+- The callback verifies the ID token signature, issuer, audience and token use against Cognito JWKS before creating a session.
+- ID and access tokens use short-lived `HttpOnly`, `SameSite=Lax`, path-scoped cookies; no token is exposed to browser JavaScript and no unused refresh token is retained.
+- Authenticated browser requests pass through an explicit route/method allowlist, not an open proxy. API Gateway independently verifies the access token.
+- Landlord/Agent is a one-time self-declared capability. A conditional DynamoDB write prevents role changes or duplicate selection before the matching Cognito group is added. Admin remains manually assigned.
+
 ## Public API controls
 
 - API Gateway throttling (burst/rate limits) protects public routes.
@@ -38,10 +47,10 @@ The seeker provides: email (via Cognito), and contact details only when making a
 
 ## Before broad public promotion
 
-1. Decide and implement the passwordless email-OTP sign-in path (custom challenge + SES).
-2. Define agent/landlord verification (KYC) scope and storage isolation.
+1. Exercise verified-email signup, callback state validation, role selection, token expiry and logout against the deployed dev user pool.
+2. Define agent/landlord verification (KYC) scope and storage isolation before any verified-identity feature is claimed.
 3. Image scanning and harmful-content moderation controls.
-4. Retention, deletion and abuse-report policies (incl. Ghana Data Protection Act, Act 843 alignment).
+4. Retention, deletion and abuse-report policies (including Ghana Data Protection Act, Act 843 alignment).
 5. Rate-limit monitoring and bot-protection strategy.
-6. Threat modelling and accessibility review.
+6. Threat modelling, dependency review and accessibility review.
 7. Clear privacy notice and terms for posters and seekers.

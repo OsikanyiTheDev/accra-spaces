@@ -26,6 +26,8 @@ DynamoDB listings store
 
 **Requests:** viewing requests and offers are stored per listing and surfaced to the poster.
 
+**Web authentication:** Next.js starts Cognito Hosted UI authorization with PKCE, validates OAuth state, exchanges the code server-side, verifies the Cognito ID token against JWKS, and stores ID/access tokens in `HttpOnly`, `SameSite=Lax` cookies. Authenticated browser actions pass through a strict allowlisted Next.js backend-for-frontend route; the access token is never placed in client JavaScript. Password entry and recovery remain inside Cognito.
+
 ## Data model
 
 DynamoDB table `listings` — composite primary key:
@@ -67,8 +69,9 @@ Search in v1 uses the browse index plus server-side filtering; the API contract 
 | `POST /listings/{id}/viewing-requests` | JWT | Structured viewing request (date/time + note) |
 | `POST /listings/{id}/offers` | JWT | Offer (GHS amount + note) |
 | `POST /listings/{id}/report` | Public (throttled) | Report a listing |
-| `GET/DELETE /me/favorites/{id}` | JWT | Favorites |
-| `GET/POST /me/saved-searches` | JWT | Saved searches (alerts land in v2) |
+| `GET /me/favorites`; `POST/DELETE /me/favorites/{id}` | JWT | Favorites |
+| `GET/POST /me/saved-searches`; `DELETE /me/saved-searches/{id}` | JWT | Saved searches (alerts land in v2) |
+| `POST /me/role` | JWT | One-time, self-declared Landlord or Agent capability |
 | `PATCH /admin/listings/{id}/status` | AWS IAM | Moderate (disable/restore) |
 
 ## Key decisions (v1)
@@ -76,8 +79,8 @@ Search in v1 uses the browse index plus server-side filtering; the API contract 
 | Decision | Choice |
 | --- | --- |
 | Hosting | Vercel (Next.js) frontend; AWS serverless backend |
-| Auth | Cognito, email-verified; passwordless email OTP planned (custom challenge + SES code delivery) before launch; no password-only accounts |
-| Roles | Seeker / Landlord / Agent / Admin (Cognito groups) |
+| Auth | Cognito verified email + password through Hosted UI; OAuth authorization code with PKCE; verified ID/access tokens stored in short-lived HTTP-only cookies |
+| Roles | Everyone begins as a Seeker capability; Landlord or Agent is a one-time self-selection recorded atomically and added to a Cognito group. The label is self-declared, never KYC. Admin remains manually assigned. |
 | Trust badge | **Completeness badge** (day+night photos, Digital Address, maintenance policy). No "verified" claims without verification. |
 | Contact | `wa.me` deep links + click-to-call; full number only on detail page |
 | GhanaPost address | Validated text field in v1; GPS lookup only after GhanaPost API access is registered |

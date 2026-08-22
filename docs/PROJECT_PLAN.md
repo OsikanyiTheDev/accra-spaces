@@ -32,15 +32,17 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 - [x] Factual completeness badge (day+night photos, Digital Address, maintenance policy)
 - [ ] Replace illustrative examples with moderated real inventory
 
-## Stage 3 — Posting, Auth & Media (API implemented; integration remains)
+## Stage 3 — Posting, Auth & Media (implemented in code; deployment testing remains)
 
-- [ ] Connect Cognito account enrollment and safe role assignment for Landlord/Agent/Seeker
-- [ ] Complete the launch decision for passwordless email OTP versus verified email + password
+- [x] Cognito verified email + password decision documented and configured
+- [x] Authorization-code + PKCE flow with verified ID token and HTTP-only cookies
+- [x] One-time, atomic self-selection of Landlord or Agent; role explicitly labelled self-declared
 - [x] `POST/PATCH /listings` handlers for owner-controlled drafts and publishing
 - [x] Day/night photo upload via constrained presigned S3 POST (private bucket)
 - [x] Authenticated viewing requests, offers, saved searches and favorites
 - [x] Basic public report + AWS IAM moderation path
-- [ ] Connect the frontend posting/actions to Cognito tokens and deployed API routes
+- [x] Frontend posting, viewing and offer actions connected through an allowlisted server proxy
+- [ ] Exercise signup, role selection, posting and request flows against the deployed dev environment
 - [ ] Add owner-facing request management UI
 
 ## v2+ (deliberately deferred)

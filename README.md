@@ -25,8 +25,10 @@ It is intentionally an **independent, community-driven product**, not a governme
 - Structured filters for area, property type, rent/sale, price, bedrooms and sorting
 - Clearly labelled illustrative inventory when no API is configured—never presented as real availability
 - Local browser favorites, saved searches and listing drafts
-- Transparent posting form for landlord/agent role, commission, deposit and maintenance terms
-- Python Lambda handlers for public search/detail, listing CRUD, signed media access, viewing requests, offers, favorites, saved searches, reports and moderation
+- Cognito verified-email/password authorization-code flow with PKCE, verified ID tokens and HTTP-only cookies
+- One-time self-selection of Landlord or Agent, always labelled self-declared rather than verified
+- Transparent posting form for role, commission, deposit and maintenance terms, wired to authenticated API and media-upload routes
+- Python Lambda handlers for public search/detail, listing CRUD, signed media access, viewing requests, offers, favorites, saved searches, role selection, reports and moderation
 - Terraform modules for DynamoDB, private S3, Cognito, Lambda/API Gateway, observability and a $10/month budget guardrail
 - CI gates for frontend lint/types/build, Lambda tests, and Terraform formatting/validation
 
@@ -73,7 +75,7 @@ npm run build
 python -m unittest discover -s lambda/tests -p 'test_*.py'
 ```
 
-Copy `.env.example` to `.env.local` only when a reviewed backend deployment provides real values. Do not add AWS credentials to frontend environment files.
+Copy `.env.example` to `.env.local` only when a reviewed backend deployment provides real values. Do not add AWS credentials to frontend environment files. See [docs/AUTHENTICATION.md](docs/AUTHENTICATION.md) for the exact Cognito flow and callback configuration.
 
 ### Terraform workflow
 

@@ -48,6 +48,8 @@ Edit `terraform.tfvars`:
 - `allowed_origins` — `["http://localhost:3000"]` initially; the Vercel origin is added later as a second item in a reviewed change
 - `alert_email` — your operational email
 - `cognito_domain_prefix` — globally unique across Cognito, e.g. `accraspaces-dev-<suffix>`
+- `auth_callback_urls` — `["http://localhost:3000/api/auth/callback"]` for the first local test
+- `auth_logout_urls` — `["http://localhost:3000/"]` for the first local test
 - `monthly_budget_usd = 10`
 
 ## 4. Init, format, validate (no AWS writes)
@@ -79,7 +81,9 @@ terraform apply tfplan
 
 ```bash
 terraform output -raw api_url
+terraform output -raw cognito_user_pool_id
 terraform output -raw cognito_user_pool_client_id
+terraform output -raw cognito_user_pool_domain_url
 ```
 
-Keep the API URL private until the frontend `NEXT_PUBLIC_API_URL` is configured and the Vercel domain is added to CORS in a second reviewed change.
+Use these non-secret identifiers only after the reviewed deployment to populate `.env.local` as described in `docs/AUTHENTICATION.md`. Do not place AWS access keys or secret keys in the web environment. Add the final Vercel callback/logout URLs and CORS origin through a second reviewed plan.
