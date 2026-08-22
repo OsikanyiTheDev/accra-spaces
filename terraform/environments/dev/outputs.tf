@@ -26,6 +26,10 @@ output "cognito_user_pool_domain_prefix" {
   value = module.auth.user_pool_domain
 }
 
+output "cognito_user_pool_domain_url" {
+  value = "https://${module.auth.user_pool_domain}.auth.${var.aws_region}.amazoncognito.com"
+}
+
 output "cognito_user_pool_client_id" {
   value = module.auth.user_pool_client_id
 }

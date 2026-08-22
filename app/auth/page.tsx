@@ -1,37 +1,59 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@/components/icons";
+import { getAuthConfig, getSession } from "@/lib/auth";
 
-export const metadata: Metadata = { title: "Account access", description: "Account access for seekers, landlords and agents." };
+export const metadata: Metadata = { title: "Account access", description: "Verified email and password account access for seekers, landlords and agents." };
 
-export default function AuthPage() {
+const ERROR_MESSAGES: Record<string, string> = {
+  invalid_callback: "The sign-in callback could not be verified. Please try again.",
+  not_configured: "Authentication has not been connected to a deployed Cognito environment yet.",
+  token_exchange_failed: "Cognito could not complete sign-in. Please try again.",
+};
+
+export default async function AuthPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const { error } = await searchParams;
+  const configured = Boolean(getAuthConfig());
+  const session = await getSession();
+
   return (
     <section className="auth-page">
       <div className="shell auth-layout">
         <div className="auth-story">
           <span className="eyebrow eyebrow-light"><Icon name="shield" size={16} /> One account, clear roles</span>
           <h1>Save what matters. Post with accountability.</h1>
-          <p>Account access supports favorites, saved searches, viewing requests and transparent landlord or agent posting.</p>
+          <p>Verified email and password access supports favorites, saved searches, viewing requests and transparent landlord or agent posting.</p>
           <ul>
             <li><Icon name="bookmark" size={18} /><span><strong>Seekers</strong>Save spaces and searches, then send structured requests.</span></li>
-            <li><Icon name="building" size={18} /><span><strong>Landlords</strong>Prepare listings and manage interest in one place.</span></li>
-            <li><Icon name="tag" size={18} /><span><strong>Agents</strong>Disclose commission terms on every agent listing.</span></li>
+            <li><Icon name="building" size={18} /><span><strong>Landlords</strong>Choose the role once, prepare listings and manage interest.</span></li>
+            <li><Icon name="tag" size={18} /><span><strong>Agents</strong>Choose the role once and disclose commission on every listing.</span></li>
           </ul>
-          <p className="auth-honesty"><Icon name="info" size={15} /> Account roles are self-declared in v1 and are not KYC verification.</p>
+          <p className="auth-honesty"><Icon name="info" size={15} /> Landlord and Agent are self-declared account roles, not KYC or property verification.</p>
         </div>
         <div className="auth-card">
           <span className="auth-lock"><Icon name="shield" size={28} /></span>
           <span className="section-kicker">Secure account access</span>
-          <h2>Sign-in connection is prepared</h2>
-          <p>Cognito infrastructure is defined in Terraform, but no AWS environment has been applied. Account creation remains disabled until the plan is reviewed and deployed.</p>
-          <div className="auth-status-list">
-            <span><Icon name="check" size={16} /> Email verification planned</span>
-            <span><Icon name="check" size={16} /> Seeker, landlord and agent roles</span>
-            <span><Icon name="check" size={16} /> JWT-protected posting routes</span>
-          </div>
-          <button className="button button-dark button-full is-disabled" type="button" disabled>Continue with email</button>
-          <small>No password or personal information is collected by this preview.</small>
-          <Link className="text-link" href="/">Continue exploring instead</Link>
+          <h2>{session ? "You are signed in" : "Continue with verified email"}</h2>
+          {error && <p className="auth-error" role="alert">{ERROR_MESSAGES[error] ?? "Sign-in could not be completed."}</p>}
+          {session ? (
+            <>
+              <p>Signed in as <strong>{session.email}</strong>. Your current account role is {session.role}.</p>
+              <Link className="button button-gold button-full" href="/account">Open my account <Icon name="arrow-right" size={17} /></Link>
+              <a className="text-link" href="/api/auth/logout">Sign out</a>
+            </>
+          ) : (
+            <>
+              <p>{configured ? "Sign in through the Cognito-hosted authorization-code flow. New accounts must confirm their email before continuing." : "Cognito is finalized in code, but no AWS environment has been applied. Account creation stays disabled until the Terraform plan is reviewed and deployed."}</p>
+              <div className="auth-status-list">
+                <span><Icon name="check" size={16} /> Verified email + password</span>
+                <span><Icon name="check" size={16} /> Authorization code with PKCE</span>
+                <span><Icon name="check" size={16} /> HTTP-only session cookies</span>
+              </div>
+              {configured ? <a className="button button-dark button-full" href="/api/auth/login">Sign in or create account <Icon name="arrow-right" size={17} /></a> : <button className="button button-dark button-full is-disabled" type="button" disabled>Sign in or create account</button>}
+              <small>{configured ? "Passwords are handled by Cognito and never pass through the Accra Spaces API." : "No password or personal information is collected by this preview."}</small>
+              <Link className="text-link" href="/">Continue exploring instead</Link>
+            </>
+          )}
         </div>
       </div>
     </section>
