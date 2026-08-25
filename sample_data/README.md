@@ -25,9 +25,16 @@ scripts/load_sample_data.py # Local AWS loader/deleter
 
 Run this from your local clone, using the AWS profile/credentials you already use for Terraform.
 
+Ubuntu/Debian may block system-wide `pip install` with an `externally-managed-environment` error. Use a project virtual environment instead:
+
 ```bash
 python3 --version
-python3 -m pip install boto3
+sudo apt update
+sudo apt install -y python3-venv
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r scripts/requirements.txt
 aws sts get-caller-identity
 ```
 

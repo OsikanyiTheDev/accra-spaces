@@ -7,14 +7,21 @@ Use this only from a trusted local machine with AWS credentials for the developm
 Quick flow:
 
 ```bash
+# From the repo root. Use a venv; Ubuntu/Debian blocks system-wide pip installs.
+sudo apt update
+sudo apt install -y python3-venv
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r scripts/requirements.txt
+
 cd terraform/environments/dev
 export LISTINGS_TABLE="$(terraform output -raw listings_table_name)"
 export MEDIA_BUCKET="$(terraform output -raw media_bucket_name)"
 cd ../../..
 
-python3 -m pip install boto3
-python3 scripts/load_sample_data.py --dry-run
-python3 scripts/load_sample_data.py
+python scripts/load_sample_data.py --dry-run
+python scripts/load_sample_data.py
 ```
 
 Remove seeded records:
