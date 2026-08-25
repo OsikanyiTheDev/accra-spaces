@@ -38,10 +38,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-osu-2bed-apartment/day.png"
+          "images/sample-osu-2bed-apartment/day.jpg"
         ],
         "night": [
-          "images/sample-osu-2bed-apartment/night.png"
+          "images/sample-osu-2bed-apartment/night.jpg"
         ]
       }
     },
@@ -79,10 +79,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-spintex-retail-shop/day.png"
+          "images/sample-spintex-retail-shop/day.jpg"
         ],
         "night": [
-          "images/sample-spintex-retail-shop/night.png"
+          "images/sample-spintex-retail-shop/night.jpg"
         ]
       }
     },
@@ -116,10 +116,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-adenta-family-house-sale/day.png"
+          "images/sample-adenta-family-house-sale/day.jpg"
         ],
         "night": [
-          "images/sample-adenta-family-house-sale/night.png"
+          "images/sample-adenta-family-house-sale/night.jpg"
         ]
       }
     },
@@ -159,10 +159,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-east-legon-office-suite/day.png"
+          "images/sample-east-legon-office-suite/day.jpg"
         ],
         "night": [
-          "images/sample-east-legon-office-suite/night.png"
+          "images/sample-east-legon-office-suite/night.jpg"
         ]
       }
     },
@@ -202,10 +202,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-cantonments-3bed-apartment/day.png"
+          "images/sample-cantonments-3bed-apartment/day.jpg"
         ],
         "night": [
-          "images/sample-cantonments-3bed-apartment/night.png"
+          "images/sample-cantonments-3bed-apartment/night.jpg"
         ]
       }
     },
@@ -239,10 +239,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-tema-gated-townhouse/day.png"
+          "images/sample-tema-gated-townhouse/day.jpg"
         ],
         "night": [
-          "images/sample-tema-gated-townhouse/night.png"
+          "images/sample-tema-gated-townhouse/night.jpg"
         ]
       }
     },
@@ -280,10 +280,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-madina-compact-shop/day.png"
+          "images/sample-madina-compact-shop/day.jpg"
         ],
         "night": [
-          "images/sample-madina-compact-shop/night.png"
+          "images/sample-madina-compact-shop/night.jpg"
         ]
       }
     },
@@ -324,10 +324,10 @@
       },
       "photos": {
         "day": [
-          "images/sample-airport-furnished-office/day.png"
+          "images/sample-airport-furnished-office/day.jpg"
         ],
         "night": [
-          "images/sample-airport-furnished-office/night.png"
+          "images/sample-airport-furnished-office/night.jpg"
         ]
       }
     }
