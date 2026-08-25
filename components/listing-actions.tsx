@@ -4,20 +4,22 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { Icon } from "@/components/icons";
 import { formatGhs, whatsappHref } from "@/lib/format";
+import { isSampleListing } from "@/lib/sample-listing";
 import type { ListingDetail, ResultSource } from "@/lib/types";
 
 export function ListingActions({ listing, source, signedIn }: { listing: ListingDetail; source: ResultSource; signedIn: boolean }) {
   const [tab, setTab] = useState<"viewing" | "offer">("viewing");
   const [notice, setNotice] = useState("");
   const [sending, setSending] = useState(false);
-  const liveContact = source === "api" && listing.poster.whatsapp;
+  const isSample = isSampleListing(listing);
+  const liveContact = source === "api" && !isSample && listing.poster.whatsapp;
 
   async function submitRequest(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formElement = event.currentTarget;
     setNotice("");
-    if (source === "demo") {
-      setNotice("Preview only—no request was sent. Illustrative listings cannot be contacted or booked.");
+    if (source === "demo" || isSample) {
+      setNotice("Sample/preview only—no request was sent. These listings cannot be contacted or booked.");
       return;
     }
     if (!signedIn) {
@@ -75,13 +77,13 @@ export function ListingActions({ listing, source, signedIn }: { listing: Listing
         ) : (
           <span className="button button-whatsapp is-disabled" aria-disabled="true"><Icon name="whatsapp" size={19} /> WhatsApp</span>
         )}
-        {source === "api" && listing.poster.phone ? (
+        {source === "api" && !isSample && listing.poster.phone ? (
           <a className="button button-quiet" href={`tel:${listing.poster.phone}`}><Icon name="phone" size={18} /> Call</a>
         ) : (
           <span className="button button-quiet is-disabled" aria-disabled="true"><Icon name="phone" size={18} /> Call</span>
         )}
       </div>
-      {source !== "api" && <p className="contact-preview-note">Contact actions are disabled for illustrative listings.</p>}
+      {(source !== "api" || isSample) && <p className="contact-preview-note">Contact actions are disabled for illustrative/sample listings.</p>}
 
       <div className="action-tabs" role="tablist" aria-label="Listing actions">
         <button type="button" className={tab === "viewing" ? "is-active" : ""} onClick={() => { setTab("viewing"); setNotice(""); }}>Book viewing</button>

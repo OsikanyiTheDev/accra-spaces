@@ -10,6 +10,7 @@ import { AMENITIES } from "@/lib/constants";
 import { getListing } from "@/lib/api";
 import { getSession } from "@/lib/auth";
 import { commissionLabel, maintenanceLabel, readableDate, typeLabel } from "@/lib/format";
+import { isSampleListing } from "@/lib/sample-listing";
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -26,6 +27,7 @@ export default async function ListingPage({ params }: PageProps) {
 
   const amenityLabels = new Map(AMENITIES);
   const commission = listing.poster.agent_commission;
+  const isSample = isSampleListing(listing);
 
   return (
     <>
@@ -38,7 +40,7 @@ export default async function ListingPage({ params }: PageProps) {
               <div className="detail-badge-row">
                 <span className="status-badge">For {listing.sale_mode === "rent" ? "rent" : "sale"}</span>
                 {listing.completeness.level === "complete" && <span className="completeness-badge"><Icon name="shield" size={14} /> Complete details</span>}
-                {listing.is_demo && <span className="demo-chip">Illustrative</span>}
+                {isSample && <span className="demo-chip">Sample data</span>}
               </div>
               <h1>{listing.title}</h1>
               <p><Icon name="map-pin" size={17} /> {listing.area}, Greater Accra · Added {readableDate(listing.created_at)}</p>
@@ -87,7 +89,7 @@ export default async function ListingPage({ params }: PageProps) {
 
             <article className="detail-block address-block">
               <div><span className="section-kicker">Area and addressing</span><h2>{listing.area}, Greater Accra</h2><p>Use the area and Digital Address to confirm the meeting point directly with the poster before travelling.</p></div>
-              <div className="address-code"><span>GhanaPost Digital Address</span><strong>{listing.digital_address ?? "Not supplied"}</strong>{listing.is_demo && <small>Placeholder in preview data</small>}</div>
+              <div className="address-code"><span>GhanaPost Digital Address</span><strong>{listing.digital_address ?? "Not supplied"}</strong>{isSample && <small>Sample-data address for development only</small>}</div>
             </article>
 
             <article className="inline-safety">

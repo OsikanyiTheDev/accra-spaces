@@ -1,3 +1,4 @@
+import { isSampleListing } from "@/lib/sample-listing";
 import type { ListingSummary } from "@/lib/types";
 
 interface PropertyVisualProps {
@@ -9,12 +10,14 @@ interface PropertyVisualProps {
 }
 
 export function PropertyVisual({ listing, night = false, label, imageUrl, priority = false }: PropertyVisualProps) {
+  const isSample = isSampleListing(listing);
   if (imageUrl) {
     return (
       <div className="property-visual property-visual-photo">
         {/* Signed S3 URLs are short lived, so browser-native loading is intentional. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imageUrl} alt={label ?? listing.title} loading={priority ? "eager" : "lazy"} />
+        {isSample && <span className="visual-demo-label">Sample data</span>}
       </div>
     );
   }
@@ -57,7 +60,7 @@ export function PropertyVisual({ listing, night = false, label, imageUrl, priori
         </g>
         {night && <g fill="#f7d88e"><circle cx="30" cy="244" r="7"/><circle cx="62" cy="244" r="7"/><circle cx="570" cy="244" r="7"/><circle cx="602" cy="244" r="7"/></g>}
       </svg>
-      {listing.is_demo && <span className="visual-demo-label">Illustrative preview</span>}
+      {isSample && <span className="visual-demo-label">Sample data</span>}
     </div>
   );
 }

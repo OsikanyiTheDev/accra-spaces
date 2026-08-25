@@ -1,0 +1,335 @@
+{
+  "schema_version": "accra-spaces-sample-v1",
+  "generated_at": "2026-08-25T18:45:00+00:00",
+  "notice": "All records are fictional sample listings for development/demo use only. They are not real property availability.",
+  "listings": [
+    {
+      "id": "sample-osu-2bed-apartment",
+      "title": "Sample: airy two-bedroom apartment in Osu",
+      "type": "apartment",
+      "sale_mode": "rent",
+      "price_ghs": 4800,
+      "negotiable": true,
+      "area": "Osu",
+      "digital_address": "GA-184-2234",
+      "deposit_months": 2,
+      "maintenance_policy": "landlord_annual",
+      "beds": 2,
+      "baths": 2,
+      "size_m2": 92,
+      "color": "Warm sand exterior with shaded balcony rails",
+      "description": "Fictional sample listing for development only. This apartment-style record demonstrates transparent rent, deposit, day/night photos and contact controls; it is not a real property and cannot be booked.",
+      "amenities": [
+        "parking",
+        "air_conditioning",
+        "water_tank",
+        "security"
+      ],
+      "poster": {
+        "name": "Sample Agent Ama",
+        "role": "agent",
+        "whatsapp": "+233000000001",
+        "phone": "+233000000001",
+        "commission": {
+          "type": "one_month_rent",
+          "value": 1,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-osu-2bed-apartment/day.png"
+        ],
+        "night": [
+          "images/sample-osu-2bed-apartment/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-spintex-retail-shop",
+      "title": "Sample: street-facing retail shop on Spintex",
+      "type": "shop",
+      "sale_mode": "rent",
+      "price_ghs": 6500,
+      "negotiable": true,
+      "area": "Spintex",
+      "digital_address": "GA-482-7781",
+      "deposit_months": 3,
+      "maintenance_policy": "tenant_deduct",
+      "beds": 0,
+      "baths": 1,
+      "size_m2": 120,
+      "color": "Charcoal frontage with wide display windows",
+      "description": "Fictional sample retail record for UI and API testing only. It shows how commercial spaces can carry rent, frontage detail, maintenance terms and agent commission without implying real availability.",
+      "amenities": [
+        "parking",
+        "security",
+        "backup_power"
+      ],
+      "poster": {
+        "name": "Sample Agent Kojo",
+        "role": "agent",
+        "whatsapp": "+233000000002",
+        "phone": "+233000000002",
+        "commission": {
+          "type": "percentage",
+          "value": 10,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-spintex-retail-shop/day.png"
+        ],
+        "night": [
+          "images/sample-spintex-retail-shop/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-adenta-family-house-sale",
+      "title": "Sample: four-bedroom family house in Adenta",
+      "type": "house",
+      "sale_mode": "sale",
+      "price_ghs": 875000,
+      "negotiable": true,
+      "area": "Adenta",
+      "digital_address": "GA-590-1407",
+      "deposit_months": 0,
+      "maintenance_policy": "included",
+      "beds": 4,
+      "baths": 3,
+      "size_m2": 260,
+      "color": "Cream walls, brown roof and enclosed compound",
+      "description": "Fictional sample sale listing for development only. It demonstrates how Accra Spaces separates asking price from rent and keeps property terms visible before a viewing.",
+      "amenities": [
+        "parking",
+        "fenced",
+        "water_tank",
+        "built_in_wardrobe"
+      ],
+      "poster": {
+        "name": "Sample Landlord Esi",
+        "role": "landlord",
+        "whatsapp": "+233000000003",
+        "phone": "+233000000003"
+      },
+      "photos": {
+        "day": [
+          "images/sample-adenta-family-house-sale/day.png"
+        ],
+        "night": [
+          "images/sample-adenta-family-house-sale/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-east-legon-office-suite",
+      "title": "Sample: flexible office suite in East Legon",
+      "type": "office",
+      "sale_mode": "rent",
+      "price_ghs": 12000,
+      "negotiable": false,
+      "area": "East Legon",
+      "digital_address": "GA-324-9910",
+      "deposit_months": 2,
+      "maintenance_policy": "included",
+      "beds": 0,
+      "baths": 2,
+      "size_m2": 180,
+      "color": "Glass frontage with neutral concrete accents",
+      "description": "Fictional sample office record for development only. It exists to exercise office filters, business-space facts, backup power amenities and night photo handling.",
+      "amenities": [
+        "parking",
+        "air_conditioning",
+        "generator",
+        "security",
+        "backup_power"
+      ],
+      "poster": {
+        "name": "Sample Agent Nii",
+        "role": "agent",
+        "whatsapp": "+233000000004",
+        "phone": "+233000000004",
+        "commission": {
+          "type": "flat_fee",
+          "value": 1000,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-east-legon-office-suite/day.png"
+        ],
+        "night": [
+          "images/sample-east-legon-office-suite/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-cantonments-3bed-apartment",
+      "title": "Sample: calm three-bedroom apartment in Cantonments",
+      "type": "apartment",
+      "sale_mode": "rent",
+      "price_ghs": 7800,
+      "negotiable": true,
+      "area": "Cantonments",
+      "digital_address": "GA-210-5572",
+      "deposit_months": 2,
+      "maintenance_policy": "landlord_annual",
+      "beds": 3,
+      "baths": 3,
+      "size_m2": 148,
+      "color": "Soft grey exterior with planted entry court",
+      "description": "Fictional sample apartment listing for development only. It is intentionally labelled as sample data and should not be treated as live availability.",
+      "amenities": [
+        "parking",
+        "air_conditioning",
+        "elevator",
+        "security",
+        "water_heater"
+      ],
+      "poster": {
+        "name": "Sample Agent Sena",
+        "role": "agent",
+        "whatsapp": "+233000000005",
+        "phone": "+233000000005",
+        "commission": {
+          "type": "one_month_rent",
+          "value": 1,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-cantonments-3bed-apartment/day.png"
+        ],
+        "night": [
+          "images/sample-cantonments-3bed-apartment/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-tema-gated-townhouse",
+      "title": "Sample: gated three-bedroom townhouse in Tema",
+      "type": "house",
+      "sale_mode": "rent",
+      "price_ghs": 5200,
+      "negotiable": true,
+      "area": "Tema",
+      "digital_address": "GT-118-3208",
+      "deposit_months": 2,
+      "maintenance_policy": "tenant_deduct",
+      "beds": 3,
+      "baths": 2,
+      "size_m2": 176,
+      "color": "White townhouse row with secure shared gate",
+      "description": "Fictional sample townhouse listing for development only. It helps test rental-house search, day/night galleries and clear maintenance responsibility labels.",
+      "amenities": [
+        "parking",
+        "fenced",
+        "water_tank",
+        "security"
+      ],
+      "poster": {
+        "name": "Sample Landlord Yaw",
+        "role": "landlord",
+        "whatsapp": "+233000000006",
+        "phone": "+233000000006"
+      },
+      "photos": {
+        "day": [
+          "images/sample-tema-gated-townhouse/day.png"
+        ],
+        "night": [
+          "images/sample-tema-gated-townhouse/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-madina-compact-shop",
+      "title": "Sample: compact service shop in Madina",
+      "type": "shop",
+      "sale_mode": "rent",
+      "price_ghs": 3200,
+      "negotiable": true,
+      "area": "Madina",
+      "digital_address": "GA-675-4390",
+      "deposit_months": 2,
+      "maintenance_policy": "tenant_deduct",
+      "beds": 0,
+      "baths": 1,
+      "size_m2": 64,
+      "color": "Blue roller shutter with tiled forecourt",
+      "description": "Fictional sample shop for development only. It demonstrates a smaller commercial rental with clear deposit and maintenance responsibilities.",
+      "amenities": [
+        "security",
+        "water_tank",
+        "backup_power"
+      ],
+      "poster": {
+        "name": "Sample Agent Afia",
+        "role": "agent",
+        "whatsapp": "+233000000007",
+        "phone": "+233000000007",
+        "commission": {
+          "type": "flat_fee",
+          "value": 800,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-madina-compact-shop/day.png"
+        ],
+        "night": [
+          "images/sample-madina-compact-shop/night.png"
+        ]
+      }
+    },
+    {
+      "id": "sample-airport-furnished-office",
+      "title": "Sample: furnished office near Airport Residential",
+      "type": "office",
+      "sale_mode": "rent",
+      "price_ghs": 18500,
+      "negotiable": false,
+      "area": "Airport Residential",
+      "digital_address": "GA-145-8802",
+      "deposit_months": 3,
+      "maintenance_policy": "included",
+      "beds": 0,
+      "baths": 3,
+      "size_m2": 240,
+      "color": "Modern white office block with covered parking",
+      "description": "Fictional sample office listing for development only. It provides a higher-price office scenario for sorting, filters and API/S3 media testing.",
+      "amenities": [
+        "parking",
+        "air_conditioning",
+        "elevator",
+        "generator",
+        "security",
+        "backup_power"
+      ],
+      "poster": {
+        "name": "Sample Agent Kofi",
+        "role": "agent",
+        "whatsapp": "+233000000008",
+        "phone": "+233000000008",
+        "commission": {
+          "type": "percentage",
+          "value": 5,
+          "note": "Sample term only"
+        }
+      },
+      "photos": {
+        "day": [
+          "images/sample-airport-furnished-office/day.png"
+        ],
+        "night": [
+          "images/sample-airport-furnished-office/night.png"
+        ]
+      }
+    }
+  ]
+}

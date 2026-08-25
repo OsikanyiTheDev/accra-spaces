@@ -78,6 +78,10 @@ python -m unittest discover -s lambda/tests -p 'test_*.py'
 
 Copy `.env.example` to `.env.local` only when a reviewed backend deployment provides real values. Do not add AWS credentials to frontend environment files. See [docs/AUTHENTICATION.md](docs/AUTHENTICATION.md) for the exact Cognito flow and callback configuration.
 
+### Fictional sample data
+
+Use [`sample_data/`](sample_data/) and [`scripts/load_sample_data.py`](scripts/load_sample_data.py) to seed generated, clearly labelled sample listings into the development DynamoDB table and private S3 media bucket from your local AWS CLI environment. See [docs/SAMPLE_DATA.md](docs/SAMPLE_DATA.md) before loading or deleting sample records.
+
 ### Terraform workflow
 
 ```bash

@@ -3,10 +3,12 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { Icon } from "@/components/icons";
 import { PropertyVisual } from "@/components/property-visual";
 import { formatGhs, maintenanceLabel, priceSuffix, typeLabel } from "@/lib/format";
+import { isSampleListing } from "@/lib/sample-listing";
 import type { ListingSummary } from "@/lib/types";
 
 export function ListingCard({ listing }: { listing: ListingSummary }) {
   const hasDayNight = listing.completeness.checks.find((check) => check.key === "day_night_photos")?.complete;
+  const isSample = isSampleListing(listing);
   return (
     <article className="listing-card">
       <div className="listing-media">
@@ -15,6 +17,7 @@ export function ListingCard({ listing }: { listing: ListingSummary }) {
         </Link>
         <div className="listing-badges">
           <span className="status-badge">For {listing.sale_mode === "rent" ? "rent" : "sale"}</span>
+          {isSample && <span className="demo-chip">Sample data</span>}
           {listing.completeness.level === "complete" && (
             <span className="completeness-badge"><Icon name="shield" size={14} /> Complete details</span>
           )}
