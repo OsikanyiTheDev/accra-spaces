@@ -5,6 +5,7 @@
 [![Next.js](https://img.shields.io/badge/Frontend-Next.js-10242F?style=flat-square)](https://nextjs.org/)
 [![Terraform](https://img.shields.io/badge/Infrastructure-Terraform-7043AC?style=flat-square)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/Backend-AWS%20Serverless-FF9900?style=flat-square)](https://aws.amazon.com/)
+[![Vercel](https://img.shields.io/badge/Live%20dev-accraspaces.vercel.app-000000?style=flat-square)](https://accraspaces.vercel.app/)
 [![Status](https://img.shields.io/badge/status-in%20development-A4702D?style=flat-square)](./docs/PROJECT_PLAN.md)
 
 ## Why Accra Spaces
@@ -19,11 +20,21 @@ Search & compare → full transparent detail → book a viewing / make an offer 
 
 It is intentionally an **independent, community-driven product**, not a government, authority, emergency or agency platform.
 
+## Current deployment
+
+- Live development frontend: <https://accraspaces.vercel.app/>
+- Development API: `https://ibq4ytc18j.execute-api.us-east-1.amazonaws.com`
+- AWS region: `us-east-1`
+- Cognito hosted UI domain: `https://accraspaces-dev-360831508664.auth.us-east-1.amazoncognito.com`
+- Data currently visible on the live dev site: 8 clearly labelled **fictional sample listings** with generated realistic day/night images
+
+> **Status note:** the Vercel frontend and AWS development backend are deployed and connected. This is still a development/integration environment: there is no real property inventory, user/client metric, verified-agent claim, or production-launch claim.
+
 ## Implemented in code
 
 - Responsive Next.js 16 search experience, listing cards and detailed day/night property view
 - Structured filters for area, property type, rent/sale, price, bedrooms and sorting
-- Clearly labelled illustrative inventory when no API is configured—never presented as real availability
+- Clearly labelled illustrative fallback inventory when no API is configured—never presented as real availability
 - Local browser favorites, saved searches and listing drafts
 - Branded Cognito verified-email/password sign-in with email-code confirmation, PKCE, verified ID tokens and HTTP-only cookies
 - One-time self-selection of Landlord or Agent, always labelled self-declared rather than verified
@@ -31,13 +42,23 @@ It is intentionally an **independent, community-driven product**, not a governme
 - Python Lambda handlers for public search/detail, listing CRUD, signed media access, viewing requests, offers, favorites, saved searches, role selection, reports and moderation
 - Terraform modules for DynamoDB, private S3, Cognito with optional TOTP, Lambda/API Gateway, cost-conscious observability and a $10/month budget alert
 - Dedicated least-privilege IAM role for one-time Cognito posting-role selection
-- CI gates for frontend lint/types/build, Lambda tests, and Terraform formatting/validation
+- Local sample-data loader for DynamoDB + private S3, with deterministic `sample-*` records and generated realistic day/night JPEGs
+- UI safeguards that mark sample listings and disable contact/request actions for them
+- CI gates for frontend lint/types/build, Lambda tests, sample-data validation and Terraform formatting/validation
 
-> **Deployment status:** the AWS development backend was deployed from a reviewed Terraform plan on 22 August 2026, and its public health/listing endpoints were verified. The frontend is connected locally for authentication testing; no Vercel production deployment, real property inventory, users metric or production-launch claim is made.
+## Data behaviour
 
-## Preview-data behaviour
+### No API configured
 
-With no `NEXT_PUBLIC_API_URL`, the web app intentionally renders six illustrative interface examples. Every example and page-level notice identifies them as previews. When an API URL is configured, the app uses only API inventory; if that service is unavailable, it shows an error and does **not** silently substitute demo listings.
+With no `NEXT_PUBLIC_API_URL`, the web app intentionally renders six illustrative interface examples. Every example and page-level notice identifies them as previews.
+
+### API configured
+
+When an API URL is configured, the app uses only API inventory. If the API is unavailable, it shows an error and does **not** silently substitute demo listings.
+
+### Seeded sample records
+
+The development API can be seeded from [`sample_data/`](sample_data/) using [`scripts/load_sample_data.py`](scripts/load_sample_data.py). These records are intentionally fictional, titled with `Sample:`, stored with deterministic `sample-*` IDs, and labelled in the UI. They are suitable for screenshots, integration testing and portfolio demos, but not for representing live availability.
 
 ## Repository layout
 
@@ -45,11 +66,13 @@ With no `NEXT_PUBLIC_API_URL`, the web app intentionally renders six illustrativ
 accra-spaces/
 ├── app/                        # Next.js App Router pages and global design system
 ├── components/                 # Search, listing, detail and form UI
-├── lib/                        # Typed API client, constants and labelled demo data
+├── lib/                        # Typed API client, constants and labelled demo/sample helpers
 ├── lambda/
 │   ├── src/handlers/           # One Lambda handler per API route
 │   ├── src/shared/             # Validation, search, media and data helpers
-│   └── tests/                  # Standard-library unit tests
+│   └── tests/                  # Standard-library unit tests, including sample-data validation
+├── sample_data/                # Fictional sample listing manifest and generated JPEG images
+├── scripts/                    # Local utility scripts, including sample-data loader
 ├── terraform/
 │   ├── bootstrap/              # remote state bucket + lock table
 │   ├── environments/dev/       # environment composition layer
@@ -80,7 +103,7 @@ Copy `.env.example` to `.env.local` only when a reviewed backend deployment prov
 
 ### Fictional sample data
 
-Use [`sample_data/`](sample_data/) and [`scripts/load_sample_data.py`](scripts/load_sample_data.py) to seed generated, clearly labelled sample listings into the development DynamoDB table and private S3 media bucket from your local AWS CLI environment. See [docs/SAMPLE_DATA.md](docs/SAMPLE_DATA.md) before loading or deleting sample records.
+Use [`sample_data/`](sample_data/) and [`scripts/load_sample_data.py`](scripts/load_sample_data.py) to seed generated, clearly labelled sample listings into the development DynamoDB table and private S3 media bucket from your local AWS CLI environment. See [docs/SAMPLE_DATA.md](docs/SAMPLE_DATA.md) before loading, refreshing or deleting sample records.
 
 ### Terraform workflow
 
@@ -100,10 +123,11 @@ Do not apply until the readable plan has been reviewed — see [docs/LOCAL_AWS_D
 
 - Prices, deposit months, maintenance policy and agent commission are structured and shown honestly
 - No invented verification: the badge reflects **listing completeness** (day+night photos, Digital Address, maintenance policy), with real KYC deliberately deferred
-- Exact contact information is absent from list/search responses and appears only on a selected published listing
+- Sample listings are fictional, visibly labelled and not contactable through WhatsApp/call/request actions
+- Exact contact information is absent from list/search responses and full contact actions are disabled for sample listings
 - “Never pay viewing fees; verify before deposits” guidance is visible in the product
 - Development photo storage is private, type-limited and size-limited; browser uploads use constrained presigned requests, while EXIF processing remains explicitly unimplemented
-- No invented metrics, users, clients, partners, certifications or authority integrations
+- No invented metrics, users, clients, partners, certifications, authority integrations or production-launch claims
 
 ## Built by
 

@@ -8,10 +8,12 @@
 - [x] Responsive Next.js frontend with search, cards, detail, posting, account and saved-item flows
 - [x] Lambda API handlers and validation tests
 - [x] CI quality gate for frontend, Lambda and Terraform
+- [x] Clearly labelled fallback demo data for no-API local previews
+- [x] Local sample-data seeding workflow for fictional `sample-*` records and private S3 media
 
-The frontend uses clearly labelled illustrative examples until a real API is configured. Completion here means implemented and validated in code—not deployed infrastructure, users or live inventory.
+Completion here means implemented and validated in code. It does not imply real property inventory, users, verified agents or production launch.
 
-## Stage 1 — AWS Dev Environment (deployed; frontend production pending)
+## Stage 1 — AWS Dev Environment and Vercel Preview (deployed)
 
 - [x] Confirm Terraform remote state in `osikanyithedev-terraform-state-2026` using the unique `accra-spaces/dev/terraform.tfstate` key
 - [x] Configure an account-specific private photo bucket and Cognito domain prefix
@@ -19,10 +21,13 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 - [x] Review and approve the hardened plan: 120 add, 0 change, 0 destroy
 - [x] Deploy DynamoDB, private S3, Cognito, Lambda and HTTP API from the exact approved saved plan
 - [x] Verify public health, empty-listing response, protected-route rejection, CORS, Cognito discovery and blocked public S3 access
+- [x] Deploy the Next.js frontend to Vercel at `https://accraspaces.vercel.app`
+- [x] Configure Vercel environment variables for API, Cognito and `AUTH_BASE_URL`
+- [x] Add the Vercel origin to API/S3 CORS and Cognito callback/logout URLs through a reviewed in-place Terraform plan
+- [x] Seed fictional sample listings and generated day/night images into the development DynamoDB/S3 backend
 - [ ] Confirm the SNS alarm email subscription
-- [ ] Configure the final Vercel origin in API/S3 CORS and Cognito callback/logout URLs through another reviewed plan
 
-## Stage 2 — Public Search & Listing Experience (API deployed; awaiting real inventory)
+## Stage 2 — Public Search & Listing Experience (live dev with fictional samples)
 
 - [x] `GET /listings` search with area / type / rent-vs-sale / price range / beds filters
 - [x] Correct newest and broad/narrow price sorting with DynamoDB indexes
@@ -30,9 +35,11 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 - [x] Listing detail page with day/night gallery, full terms and safety guidance
 - [x] WhatsApp `wa.me` and click-to-call logic for real API contact data
 - [x] Factual completeness badge (day+night photos, Digital Address, maintenance policy)
-- [ ] Replace illustrative examples with moderated real inventory
+- [x] Generated realistic day/night sample imagery for frontend review
+- [x] Sample labels and contact-action blocking for seeded fictional records
+- [ ] Replace fictional sample records with moderated real inventory when onboarding and moderation are ready
 
-## Stage 3 — Posting, Auth & Media (implemented in code; deployment testing remains)
+## Stage 3 — Posting, Auth & Media (implemented; dev integration testing ongoing)
 
 - [x] Cognito verified email + password decision documented and configured
 - [x] Authorization-code + PKCE flow with verified ID token and HTTP-only cookies
@@ -43,7 +50,7 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 - [x] Basic public report + AWS IAM moderation path
 - [x] Frontend posting, viewing and offer actions connected through an allowlisted server proxy
 - [x] Exercise signup, email-code confirmation, sign-in and account opening against the deployed dev environment
-- [ ] Exercise one-time role selection, listing publication, photo upload and seeker request flows
+- [ ] Exercise one-time role selection, listing publication, photo upload and seeker request flows with a non-sample listing
 - [ ] Add owner-facing request management UI
 
 ## v2+ (deliberately deferred)
@@ -60,6 +67,7 @@ The frontend uses clearly labelled illustrative examples until a real API is con
 ## Honesty rules
 
 - The visible badge in v1 means **listing completeness**, never verified identity.
-- No invented metrics, users, partners, authority integrations, clients, certifications or deployments.
-- Illustrative interface records must stay labelled and cannot be mistaken for live inventory.
+- No invented metrics, users, partners, authority integrations, clients, certifications or production-launch claims.
+- Fictional sample records must stay labelled, use `sample-*` IDs and remain non-contactable.
+- Real inventory must not be mixed into sample/demo language; real listings require onboarding, moderation and privacy controls.
 - CivicSignal remains the lead case study in the portfolio until Accra Spaces is genuinely strong.

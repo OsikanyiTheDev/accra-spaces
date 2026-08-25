@@ -10,6 +10,12 @@ Passwords, confirmation codes and recovery stay inside Cognito Hosted UI. The ap
 
 The Cognito classic Hosted UI remains the security boundary, but Terraform applies the Accra Spaces wordmark and a constrained CSS theme from `terraform/modules/auth/assets/`. The palette uses cream, walnut, earth and gold to match the product frontend instead of Cognito's default blue styling. This is presentation-only: callback validation, PKCE and token handling remain unchanged.
 
+Current dev Hosted UI domain:
+
+```text
+https://accraspaces-dev-360831508664.auth.us-east-1.amazoncognito.com
+```
+
 ## Browser flow
 
 ```text
@@ -42,6 +48,8 @@ These are self-declared capability labels. They are never described as identity,
 
 ## Required server environment
 
+Generic shape:
+
 ```text
 AUTH_BASE_URL=https://your-final-app-origin
 API_URL=https://your-api-id.execute-api.us-east-1.amazonaws.com
@@ -49,6 +57,18 @@ NEXT_PUBLIC_API_URL=https://your-api-id.execute-api.us-east-1.amazonaws.com
 COGNITO_DOMAIN=https://your-prefix.auth.us-east-1.amazoncognito.com
 COGNITO_CLIENT_ID=…
 COGNITO_USER_POOL_ID=…
+COGNITO_REGION=us-east-1
+```
+
+Current deployed dev/Vercel values:
+
+```env
+AUTH_BASE_URL=https://accraspaces.vercel.app
+API_URL=https://ibq4ytc18j.execute-api.us-east-1.amazonaws.com
+NEXT_PUBLIC_API_URL=https://ibq4ytc18j.execute-api.us-east-1.amazonaws.com
+COGNITO_DOMAIN=https://accraspaces-dev-360831508664.auth.us-east-1.amazoncognito.com
+COGNITO_CLIENT_ID=4h6fs4ckbqqn6q0rg008ts520a
+COGNITO_USER_POOL_ID=us-east-1_0P8yJBqrS
 COGNITO_REGION=us-east-1
 ```
 
@@ -63,19 +83,31 @@ Callback: http://localhost:3000/api/auth/callback
 Logout:   http://localhost:3000/
 ```
 
-For Vercel, replace the origin with the final reviewed deployment URL and include that exact origin in Cognito callback/logout configuration and API/S3 CORS.
+Current Vercel development preview:
+
+```text
+Callback: https://accraspaces.vercel.app/api/auth/callback
+Logout:   https://accraspaces.vercel.app/
+```
+
+The callback/logout URLs must match exactly in Cognito. The API/S3 CORS allowed origin uses the origin only, without a trailing slash:
+
+```text
+https://accraspaces.vercel.app
+```
 
 ## Deployment test checklist
 
-Before public promotion:
+Before broad public promotion:
 
 1. New account confirms email before sign-in.
 2. Invalid/missing OAuth state is rejected.
 3. Callback and logout URLs match exactly.
-4. Seeker can favorite, save, request a viewing and make an offer.
-5. Role can be selected once and cannot be changed through the public endpoint.
-6. Agent cannot create a listing without commission terms.
-7. New login after role selection contains the correct Cognito group.
-8. Expired tokens fail cleanly and require sign-in again.
-9. Admin cannot be self-selected.
-10. Browser JavaScript cannot read Cognito tokens.
+4. Seeker can favorite, save, request a viewing and make an offer on a non-sample published listing.
+5. Sample listings remain visibly labelled and cannot be contacted/requested.
+6. Role can be selected once and cannot be changed through the public endpoint.
+7. Agent cannot create a listing without commission terms.
+8. New login after role selection contains the correct Cognito group.
+9. Expired tokens fail cleanly and require sign-in again.
+10. Admin cannot be self-selected.
+11. Browser JavaScript cannot read Cognito tokens.

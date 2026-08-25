@@ -54,6 +54,8 @@ Listing status: `draft → pending → published → disabled | sold` (v1 keeps 
 
 Key listing fields: title, type (apartment/house/shop/office), sale_mode (rent/sale), price_ghs, negotiable, area (Greater Accra list), digital_address (validated `AA-000-0000` pattern), beds, baths, size_m2, deposit_months, maintenance_policy, amenities[], description, color/exterior note, day_photos[], night_photos[], poster {role, name, whatsapp, commission {type, value, note}}, completeness flags, status, timestamps, cognito_sub.
 
+Fictional development sample records use deterministic `sample-*` listing IDs, generated day/night JPEG keys and a `sample_data` marker. The frontend treats them as sample-only records and disables contact/request actions even though they are served through the same API/S3 path.
+
 Search in v1 uses the browse index plus server-side filtering; the API contract is designed so the index can be swapped (e.g. OpenSearch) without changing the frontend.
 
 ## Proposed API surface (v1)

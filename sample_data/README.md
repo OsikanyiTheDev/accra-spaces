@@ -1,13 +1,13 @@
 # Accra Spaces sample data
 
-This folder contains **fictional sample listings** and generated illustrative images for development/testing. They are not real properties, not real availability and should not be represented as verified inventory.
+This folder contains **fictional sample listings** and generated realistic property-style images for development/testing. They are not real properties, not real availability and should not be represented as verified inventory.
 
 The records are designed to fit the current DynamoDB + private S3 media model:
 
 - 8 published/draft-capable sample listings
 - apartments, houses, shops and offices
 - rent and sale scenarios
-- day and night images for every listing
+- day and night generated JPEG images for every listing
 - sample poster/contact terms that pass validation
 - deterministic IDs prefixed with `sample-` so they can be safely reloaded or deleted
 
@@ -16,9 +16,10 @@ The records are designed to fit the current DynamoDB + private S3 media model:
 ```text
 sample_data/
 ├── listings.json          # Fictional listing manifest
-└── images/<listing-id>/   # Generated day/night PNGs
+└── images/<listing-id>/   # Generated day/night JPGs
 
 scripts/load_sample_data.py # Local AWS loader/deleter
+scripts/requirements.txt    # Python dependency list for the loader
 ```
 
 ## Prerequisites
@@ -57,7 +58,7 @@ export AWS_REGION=us-east-1
 ## Dry run first
 
 ```bash
-python3 scripts/load_sample_data.py --dry-run
+python scripts/load_sample_data.py --dry-run
 ```
 
 This validates the JSON against the same payload rules used by the Lambda API and prints the S3/DynamoDB actions without writing anything.
@@ -67,13 +68,13 @@ This validates the JSON against the same payload rules used by the Lambda API an
 By default, the script writes the listings as `published`, so they appear on the live site after API/Vercel caches refresh.
 
 ```bash
-python3 scripts/load_sample_data.py
+python scripts/load_sample_data.py
 ```
 
 Or pass values explicitly:
 
 ```bash
-python3 scripts/load_sample_data.py \
+python scripts/load_sample_data.py \
   --region us-east-1 \
   --table "$LISTINGS_TABLE" \
   --bucket "$MEDIA_BUCKET"
@@ -82,13 +83,24 @@ python3 scripts/load_sample_data.py \
 To seed them as drafts instead:
 
 ```bash
-python3 scripts/load_sample_data.py --status draft
+python scripts/load_sample_data.py --status draft
+```
+
+## Refresh already-loaded sample data
+
+If the manifest or images changed, remove the previous sample records and load again:
+
+```bash
+python scripts/load_sample_data.py --delete --dry-run
+python scripts/load_sample_data.py --delete --yes
+python scripts/load_sample_data.py --dry-run
+python scripts/load_sample_data.py
 ```
 
 ## Verify
 
 ```bash
-curl "https://ibq4ytc18j.execute-api.us-east-1.amazonaws.com/listings" | python3 -m json.tool
+curl "https://ibq4ytc18j.execute-api.us-east-1.amazonaws.com/listings" | python -m json.tool
 ```
 
 Then open:
@@ -104,18 +116,20 @@ The delete mode removes only the deterministic `sample-*` listing records from `
 Dry run:
 
 ```bash
-python3 scripts/load_sample_data.py --delete --dry-run
+python scripts/load_sample_data.py --delete --dry-run
 ```
 
 Delete:
 
 ```bash
-python3 scripts/load_sample_data.py --delete --yes
+python scripts/load_sample_data.py --delete --yes
 ```
 
 ## Safety notes
 
 - Do not use real customer/agent phone numbers in sample data.
 - Do not remove the `Sample:` title prefix or the fictional-sample wording from descriptions.
+- Do not claim generated sample images are photos of real available properties.
+- Keep sample IDs prefixed with `sample-`; the frontend uses that to label and block contact actions.
 - The loader writes directly to DynamoDB/S3, so review `--dry-run` output before loading.
 - The script does not run Terraform and does not need AWS secret values in the repository.

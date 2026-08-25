@@ -1,6 +1,6 @@
 # Accra Spaces — Local AWS Deployment Guide
 
-Use this guide on your own computer, where AWS credentials are already configured. **Never paste AWS access keys into GitHub, `.tfvars`, the frontend, or chat.**
+Use this guide on your own computer, where AWS credentials are already configured. **Never paste AWS access keys into GitHub, `.tfvars`, the frontend, Vercel, or chat.**
 
 ## 0. Confirm the AWS identity
 
@@ -42,16 +42,40 @@ cd terraform/environments/dev
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-Edit `terraform.tfvars`:
+Current dev values use the Vercel origin `https://accraspaces.vercel.app`:
 
-- `media_bucket_name` — unique, e.g. `accraspaces-media-ACCOUNT_ID-2026`
-- `allowed_origins` — `["http://localhost:3000"]` initially; the Vercel origin is added later as a second item in a reviewed change
-- `alert_email` — your operational email
-- `cognito_domain_prefix` — globally unique across Cognito, e.g. `accraspaces-dev-<suffix>`
-- `auth_callback_urls` — `["http://localhost:3000/api/auth/callback"]` for the first local test
-- `auth_logout_urls` — `["http://localhost:3000/"]` for the first local test
-- `monthly_budget_usd = 10`
-- `api_throttling_rate_limit = 2` and `api_throttling_burst_limit = 5` for cost-conscious dev traffic
+```hcl
+media_bucket_name = "accraspaces-media-360831508664-2026"
+
+allowed_origins = [
+  "http://localhost:3000",
+  "https://accraspaces.vercel.app"
+]
+
+alert_email        = "you@example.com"
+monthly_budget_usd = 10
+
+cognito_domain_prefix = "accraspaces-dev-360831508664"
+
+auth_callback_urls = [
+  "http://localhost:3000/api/auth/callback",
+  "https://accraspaces.vercel.app/api/auth/callback"
+]
+
+auth_logout_urls = [
+  "http://localhost:3000/",
+  "https://accraspaces.vercel.app/"
+]
+
+api_throttling_rate_limit  = 2
+api_throttling_burst_limit = 5
+```
+
+Notes:
+
+- `allowed_origins` values are origins only; no trailing slash for the Vercel origin.
+- `auth_logout_urls` should include the trailing slash because the app sends `https://accraspaces.vercel.app/`.
+- Keep `monthly_budget_usd = 10` unless a larger dev budget is explicitly reviewed.
 
 ## 4. Init, format, validate (no AWS writes)
 
@@ -68,11 +92,13 @@ terraform plan -out=tfplan
 terraform show tfplan
 ```
 
-Review it. Expected: DynamoDB table, private S3 bucket, Cognito user pool/domain/groups with optional TOTP, Lambda functions, HTTP API, log groups, one API 5xx alarm/SNS path, and the $10 budget alert. The `select_role` Lambda must have its own restricted IAM role; the shared API role must have no Cognito administration action. **Not expected:** per-Lambda alarms in dev, EC2, NAT Gateway, RDS, ALB, VPC, OpenSearch, or anything else.
+Review it. Expected for the already-deployed dev environment: no destroy, no replacements, and only the exact changes you intended. For a fresh dev deployment, expected resources include DynamoDB table, private S3 bucket, Cognito user pool/domain/groups with optional TOTP, Lambda functions, HTTP API, log groups, one API 5xx alarm/SNS path, and the $10 budget alert. The `select_role` Lambda must have its own restricted IAM role; the shared API role must have no Cognito administration action.
+
+**Not expected:** per-Lambda alarms in dev, EC2, NAT Gateway, RDS, ALB, VPC, OpenSearch, or anything else.
 
 ## 6. Before apply
 
-Send the readable `terraform show tfplan` output for review. Confirm: correct account ID, unique bucket + Cognito domain, `accra-spaces/dev/terraform.tfstate`, correct alert email, intentional account-level budget alert (not a hard cap), no unexpected billable resources. Only then:
+Send or review the readable `terraform show tfplan` output. Confirm: correct account ID, unique bucket + Cognito domain, `accra-spaces/dev/terraform.tfstate`, correct alert email, intentional account-level budget alert (not a hard cap), no unexpected billable resources. Only then:
 
 ```bash
 terraform apply tfplan
@@ -85,6 +111,29 @@ terraform output -raw api_url
 terraform output -raw cognito_user_pool_id
 terraform output -raw cognito_user_pool_client_id
 terraform output -raw cognito_user_pool_domain_url
+terraform output -raw listings_table_name
+terraform output -raw media_bucket_name
 ```
 
-Use these non-secret identifiers only after the reviewed deployment to populate `.env.local` as described in `docs/AUTHENTICATION.md`. Do not place AWS access keys or secret keys in the web environment. Add the final Vercel callback/logout URLs and CORS origin through a second reviewed plan.
+Use these non-secret identifiers only after the reviewed deployment to populate `.env.local` or Vercel environment variables as described in `docs/AUTHENTICATION.md`. Do not place AWS access keys or secret keys in the web environment.
+
+## 8. Optional: seed fictional sample data
+
+After the backend exists, seed the fictional sample listings from a local virtual environment:
+
+```bash
+cd ../../..
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r scripts/requirements.txt
+
+cd terraform/environments/dev
+export LISTINGS_TABLE="$(terraform output -raw listings_table_name)"
+export MEDIA_BUCKET="$(terraform output -raw media_bucket_name)"
+cd ../../..
+
+python scripts/load_sample_data.py --dry-run
+python scripts/load_sample_data.py
+```
+
+See [SAMPLE_DATA.md](SAMPLE_DATA.md) for refresh/delete commands.

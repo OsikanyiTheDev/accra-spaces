@@ -45,6 +45,7 @@ The seeker provides: email (via Cognito), and contact details only when making a
 ## Trust labelling
 
 - The badge displayed in v1 is a **completeness badge** — factual (day+night photos, Digital Address, maintenance policy). It is never called "Verified" and never implies identity verification, government approval, or a background check.
+- Fictional sample records use deterministic `sample-*` IDs, `Sample:` titles and development-only descriptions. The frontend labels them as sample data and disables WhatsApp, call, viewing-request and offer actions for them.
 - Safety guidance is shown in-product: "Never pay viewing fees. Verify identity and ownership before paying deposits."
 
 ## Before broad public promotion

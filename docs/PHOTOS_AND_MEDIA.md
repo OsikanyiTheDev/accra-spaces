@@ -15,13 +15,27 @@ Day and night photos exist to show lighting, street visibility and street presen
 
 ## Bucket layout
 
+Authenticated user uploads use generated UUID keys:
+
 ```text
 listings/{listing_id}/day/{uuid}.jpg
 listings/{listing_id}/night/{uuid}.jpg
 pending/{...}      → 30-day expiry when this prefix is used for abandoned uploads
 ```
 
+Fictional sample data uses deterministic keys so it can be refreshed and deleted safely:
+
+```text
+listings/sample-{slug}/day/01-day.jpg
+listings/sample-{slug}/night/01-night.jpg
+```
+
+## Sample images
+
+The committed sample images are generated realistic property-style JPEGs for development review. They are not photos of real available listings. The frontend labels records with `sample-*` IDs as sample data and disables contact/request actions for them.
+
 ## Safety
 
 - No photos are made public before the listing is published.
 - Reportable content: inappropriate, misleading or stolen photos can be reported per listing; moderation can disable the listing (v1) — the full moderation dashboard is v2.
+- Before broad real-inventory onboarding, add a final review for image scanning, EXIF stripping, deletion/retention policy and abuse-handling operations.
